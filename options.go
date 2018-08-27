@@ -4,7 +4,7 @@ import "time"
 
 // PlatformIOS 修改push平台为iOS
 func PlatformiOSOpt() ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Platform = PlatformiOS
 		return nil
 	}
@@ -12,7 +12,7 @@ func PlatformiOSOpt() ReqOption {
 
 // PlatformAndroid 修改push平台为PlatformAndroid
 func PlatformAndroidOpt() ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Platform = PlatformAndroid
 		return nil
 	}
@@ -20,7 +20,7 @@ func PlatformAndroidOpt() ReqOption {
 
 // EnvProd 修改请求环境为product，只对iOS有效
 func EnvProductionOpt() ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Environment = EnvProd
 		return nil
 	}
@@ -28,7 +28,7 @@ func EnvProductionOpt() ReqOption {
 
 // EnvDev 修改请求环境为dev，只对iOS有效
 func EnvDevelopOpt() ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Environment = EnvDev
 		return nil
 	}
@@ -36,7 +36,7 @@ func EnvDevelopOpt() ReqOption {
 
 // Title 修改push title
 func TitleOpt(t string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Title = t
 		if r.Message.IOS != nil {
 			if r.Message.IOS.Aps != nil {
@@ -59,7 +59,7 @@ func TitleOpt(t string) ReqOption {
 
 // Content 修改push content
 func ContentOpt(c string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Content = c
 		if r.Message.IOS != nil {
 			if r.Message.IOS.Aps != nil {
@@ -84,7 +84,7 @@ func ContentOpt(c string) ReqOption {
 
 // NID 修改nid
 func NIDOpt(id int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.NID = id
 		return nil
 	}
@@ -92,7 +92,7 @@ func NIDOpt(id int) ReqOption {
 
 // BuilderID 修改builder_id
 func BuilderIDOpt(id int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.BuilderID = id
 		return nil
 	}
@@ -100,7 +100,7 @@ func BuilderIDOpt(id int) ReqOption {
 
 // Ring 修改ring
 func RingOpt(ring int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.Ring = ring
 		return nil
 	}
@@ -108,7 +108,7 @@ func RingOpt(ring int) ReqOption {
 
 // RingRaw 修改ring_raw
 func RingRawOpt(rr string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.RingRaw = rr
 		return nil
 	}
@@ -116,7 +116,7 @@ func RingRawOpt(rr string) ReqOption {
 
 // Vibrate 修改vibrate
 func VibrateOpt(v int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.Vibrate = v
 		return nil
 	}
@@ -124,7 +124,7 @@ func VibrateOpt(v int) ReqOption {
 
 // Lights 修改lights
 func LightsOpt(l int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.Lights = l
 		return nil
 	}
@@ -132,7 +132,7 @@ func LightsOpt(l int) ReqOption {
 
 // Clearable 修改clearable
 func ClearableOpt(c int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.Clearable = c
 		return nil
 	}
@@ -140,7 +140,7 @@ func ClearableOpt(c int) ReqOption {
 
 // IconType 修改icon_type
 func IconTypeOpt(it int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.IconType = it
 		return nil
 	}
@@ -148,7 +148,7 @@ func IconTypeOpt(it int) ReqOption {
 
 // IconRes 修改icon_res
 func IconResOpt(ir string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.IconRes = ir
 		return nil
 	}
@@ -156,14 +156,15 @@ func IconResOpt(ir string) ReqOption {
 
 // StyleID 修改style_id
 func StyleIDOpt(s int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.StyleID = s
+		return nil
 	}
 }
 
 // SmallIcon 修改small_icon
 func SmallIconOpt(si int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.SmallIcon = si
 		return nil
 	}
@@ -171,7 +172,7 @@ func SmallIconOpt(si int) ReqOption {
 
 // Action 修改action
 func ActionOpt(a map[string]interface{}) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.Action = a
 		return nil
 	}
@@ -179,7 +180,7 @@ func ActionOpt(a map[string]interface{}) ReqOption {
 
 // AddAction 添加action
 func AddActionOpt(k string, v interface{}) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		if r.Message.Android.Action == nil {
 			r.Message.Android.Action = map[string]interface{}{k: v}
 		} else {
@@ -191,7 +192,7 @@ func AddActionOpt(k string, v interface{}) ReqOption {
 
 // CustomContent 修改custom_content 和 custom
 func CustomContentOpt(ct map[string]string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.Android.CustomContent = ct
 		r.Message.IOS.Custom = ct
 		return nil
@@ -200,7 +201,7 @@ func CustomContentOpt(ct map[string]string) ReqOption {
 
 // CustomContentSet 设置custom_content和custom的某个字段
 func CustomContentSetOpt(k, v string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		if r.Message.Android.CustomContent == nil {
 			r.Message.Android.CustomContent = map[string]string{k: v}
 		} else {
@@ -217,7 +218,7 @@ func CustomContentSetOpt(k, v string) ReqOption {
 
 // Aps 修改aps
 func ApsOpt(aps *Aps) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message.IOS.Aps = aps
 		return nil
 	}
@@ -225,7 +226,7 @@ func ApsOpt(aps *Aps) ReqOption {
 
 // RequestAudienceType 修改audience_type
 func AudienceTypeOpt(at AudienceType) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.AudienceType = at
 		return nil
 	}
@@ -233,7 +234,7 @@ func AudienceTypeOpt(at AudienceType) ReqOption {
 
 // Platform 修改platform
 func PlatformOpt(p Platform) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Platform = p
 		return nil
 	}
@@ -241,7 +242,7 @@ func PlatformOpt(p Platform) ReqOption {
 
 // Message 修改message
 func MessageOpt(m Message) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Message = m
 		return nil
 	}
@@ -250,7 +251,7 @@ func MessageOpt(m Message) ReqOption {
 //TagList 俭省写法
 
 func TagListOpt(op TagOpration, tags ...string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.TagList = TagList{Tags: tags, TagOpration: op}
 		return nil
 	}
@@ -258,7 +259,7 @@ func TagListOpt(op TagOpration, tags ...string) ReqOption {
 
 // TagList 修改tag_list
 func TagListOpt2(tl TagList) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.TagList = tl
 		return nil
 	}
@@ -266,7 +267,7 @@ func TagListOpt2(tl TagList) ReqOption {
 
 // TokenList 修改token_list
 func TokenListOpt(tl []string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.TokenList = tl
 		return nil
 	}
@@ -274,7 +275,7 @@ func TokenListOpt(tl []string) ReqOption {
 
 // TokenListAdd 给token_list添加一个token
 func TokenListAddOpt(t string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		if r.TokenList != nil {
 			r.TokenList = append(r.TokenList, t)
 		} else {
@@ -286,7 +287,7 @@ func TokenListAddOpt(t string) ReqOption {
 
 // AccountList 修改account_list
 func AccountListOpt(al []string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.AccountList = al
 		return nil
 	}
@@ -294,7 +295,7 @@ func AccountListOpt(al []string) ReqOption {
 
 // AccountListAdd 给account_list添加一个account
 func AccountListAddOpt(a string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		if r.AccountList != nil {
 			r.AccountList = append(r.AccountList, a)
 		} else {
@@ -306,7 +307,7 @@ func AccountListAddOpt(a string) ReqOption {
 
 // ExpireTime 修改expire_time
 func ExpireTimeOpt(et time.Time) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.ExpireTime = int(et.Unix())
 		return nil
 	}
@@ -314,7 +315,7 @@ func ExpireTimeOpt(et time.Time) ReqOption {
 
 // SendTime 修改send_time
 func SendTimeOpt(st time.Time) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.SendTime = st.Format("2006-01-02 15:04:05:07")
 		return nil
 	}
@@ -322,7 +323,7 @@ func SendTimeOpt(st time.Time) ReqOption {
 
 // MultiPkg 修改multi_pkg
 func MultiPkgOpt(mp bool) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.MultiPkg = mp
 		return nil
 	}
@@ -330,7 +331,7 @@ func MultiPkgOpt(mp bool) ReqOption {
 
 // LoopTimes 修改loop_times
 func LoopTimesOpt(lt int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.LoopTimes = lt
 		return nil
 	}
@@ -338,7 +339,7 @@ func LoopTimesOpt(lt int) ReqOption {
 
 // StatTag 修改stat_tag
 func StatTagOpt(st string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.StatTag = st
 		return nil
 	}
@@ -346,7 +347,7 @@ func StatTagOpt(st string) ReqOption {
 
 // Seq 修改seq
 func SeqOpt(s int64) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.Seq = s
 		return nil
 	}
@@ -354,7 +355,7 @@ func SeqOpt(s int64) ReqOption {
 
 // RequestAudienceType 修改account_type
 func AccountTypeOpt(at int) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.AccountType = at
 		return nil
 	}
@@ -362,7 +363,7 @@ func AccountTypeOpt(at int) ReqOption {
 
 // PushID 修改push_id
 func PushIDOpt(pid string) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.PushID = pid
 		return nil
 	}
@@ -370,7 +371,7 @@ func PushIDOpt(pid string) ReqOption {
 
 // MessageType 修改消息类型
 func MessageTypeOpt(t MessageType) ReqOption {
-	return func(r *Request) error {
+	return func(r *PushRequest) error {
 		r.MessageType = t
 		return nil
 	}

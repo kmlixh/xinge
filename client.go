@@ -1,6 +1,8 @@
 package xinge
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -16,15 +18,43 @@ TODO List
 type XingeClient struct {
 	AndroidAuth Auther
 	IOSAuth     Auther
-	client      *http.Client
+	Client      *http.Client
 }
 
-func (client XingeClient) Push(rst *Request) {
-	rst.nextRequest()
+func (client XingeClient) Push(rst *PushRequest) CommonRsp {
+	var commonRsp CommonRsp
+	temp := rst.nextRequest()
+	pushId := "0"
+	for ; temp != nil; temp = rst.nextRequest() {
+		temp.RenderOptions(PushIDOpt(pushId))
+		var httpRequest *http.Request
+		if rst.Platform == PlatformAndroid {
+			httpRequest, _ = temp.toHttpRequest(client.AndroidAuth)
+		} else {
+			httpRequest, _ = temp.toHttpRequest(client.IOSAuth)
+		}
+
+		if httpRequest != nil {
+			resp, _ := client.Client.Do(httpRequest)
+			commonRsp = client.MarshalResp(resp)
+			if len(commonRsp.PushID) > 0 {
+				pushId = commonRsp.PushID
+			}
+		}
+	}
+	return commonRsp
+}
+func (client XingeClient) MarshalResp(resp *http.Response) CommonRsp {
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	r := CommonRsp{}
+	json.Unmarshal(body, &r)
+	return r
 }
 
 // New 创建一个新的默认http客户端
-func New() *http.Client {
+func NewHttpClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
 			MaxIdleConns:        100,

@@ -3,7 +3,7 @@ package xinge
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/kataras/iris/core/errors"
+	"errors"
 	"net/http"
 )
 
@@ -24,7 +24,15 @@ const (
 	EnvDev CommonRspEnv = "dev"
 )
 
-type ReqOption func(*Request) error
+// XingeURL 信鸽API地址
+var XingeURL = "https://openapi.xg.qq.com/v3/push/app"
+
+// PushURL 修改信鸽的请求URL
+func PushURL(url string) {
+	XingeURL = url
+}
+
+type ReqOption func(*PushRequest) error
 
 // CommonRsp 信鸽推送接口的通用基础返回值
 type CommonRsp struct {
@@ -64,9 +72,6 @@ const (
 type Platform string
 
 const (
-	// PlatformAll 全平台推送
-	//PlatformAll Platform = "all"
-	// PlatformAndroid 安卓推送
 	PlatformAndroid Platform = "android"
 	// PlatformiOS 苹果推送
 	PlatformiOS Platform = "ios"
@@ -82,8 +87,8 @@ const (
 	MsgTypeMessage MessageType = "message"
 )
 
-// Request push API 必要参数
-type Request struct {
+// PushRequest push API 必要参数
+type PushRequest struct {
 	// 受众类型，见AudienceType类型
 	AudienceType `json:"audience_type"`
 	// 推送平台，见Platform类型
@@ -157,16 +162,22 @@ type Request struct {
 
 	nextIndex int `json:"-"` //如果推送的account,token大于1000,需要轮询推送
 }
+type IPushRequest interface {
+	RenderOptions(opts ...ReqOption) error
+	clone(options ...ReqOption) IPushRequest
+	nextRequest() IPushRequest
+	toHttpRequest(auther Auther) (request *http.Request, err error)
+}
 
-func (rst *Request) RenderOptions(opts ...ReqOption) error {
+func (rst *PushRequest) RenderOptions(opts ...ReqOption) error {
 	for _, opt := range opts {
 		err := opt(rst)
 		return err
 	}
 	return nil
 }
-func (rst *Request) clone(options ...ReqOption) (Request, error) {
-	request := Request{
+func (rst *PushRequest) clone(options ...ReqOption) IPushRequest {
+	request := PushRequest{
 		AudienceType: rst.AudienceType,
 		Platform:     rst.Platform,
 		Message:      rst.Message,
@@ -184,9 +195,37 @@ func (rst *Request) clone(options ...ReqOption) (Request, error) {
 		AccountType:  rst.AccountType,
 		PushID:       rst.PushID}
 	err := request.RenderOptions(options...)
-	return request, err
+	if err != nil {
+		return nil
+	}
+	return &request
 }
-func sliceAccountList(rst *Request) error {
+func (rst *PushRequest) nextRequest() IPushRequest {
+	var request IPushRequest
+	if rst.AudienceType == AdTypeAccountList {
+		request = rst.clone(sliceAccountList)
+	} else if rst.AudienceType == AdTypeTokenList {
+		request = rst.clone(sliceTokenList)
+	} else if rst.nextIndex == 0 {
+		return rst
+	}
+	return request
+}
+
+func (rst PushRequest) toHttpRequest(auther Auther) (request *http.Request, err error) {
+
+	bodyBytes, err := json.Marshal(rst)
+	if err != nil {
+		return nil, err
+	}
+	request, err = http.NewRequest("POST", XingeURL, bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, err
+	}
+	auther.Auth(request)
+	return
+}
+func sliceAccountList(rst *PushRequest) error {
 	lens := len(rst.AccountList)
 	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
 		end := rst.nextIndex + 1000
@@ -199,7 +238,7 @@ func sliceAccountList(rst *Request) error {
 		return errors.New("index out of range!")
 	}
 }
-func sliceTokenList(rst *Request) error {
+func sliceTokenList(rst *PushRequest) error {
 	lens := len(rst.TokenList)
 	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
 		end := rst.nextIndex + 1000
@@ -212,29 +251,6 @@ func sliceTokenList(rst *Request) error {
 	} else {
 		return errors.New("index out of range!")
 	}
-}
-func (rst *Request) nextRequest() (Request, error) {
-	var request Request
-	var er error = nil
-	if rst.AudienceType == AdTypeAccountList {
-		request, er = rst.clone(sliceAccountList)
-	} else if rst.AudienceType == AdTypeTokenList {
-		request, er = rst.clone(sliceTokenList)
-	}
-	return request, er
-}
-
-func (rst Request) toHttpRequest() (request *http.Request, err error) {
-
-	bodyBytes, err := json.Marshal(rst)
-	if err != nil {
-		return nil, err
-	}
-	request, err = http.NewRequest("POST", XingeURL, bytes.NewReader(bodyBytes))
-	if err != nil {
-		return nil, err
-	}
-	return
 }
 
 // TagOpration 标签推送参数的逻辑操作符
