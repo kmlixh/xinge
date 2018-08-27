@@ -1,5 +1,12 @@
 package xinge
 
+import (
+	"bytes"
+	"encoding/json"
+	"github.com/kataras/iris/core/errors"
+	"net/http"
+)
+
 // TODO: 信鸽人工服务
 // 后端API V3，iOS 发push的时候message_type填message的时候报错
 
@@ -17,6 +24,8 @@ const (
 	EnvDev CommonRspEnv = "dev"
 )
 
+type ReqOption func(*Request) error
+
 // CommonRsp 信鸽推送接口的通用基础返回值
 type CommonRsp struct {
 	// TODO: doc this
@@ -33,22 +42,22 @@ type CommonRsp struct {
 	Result map[string]string `json:"result,omitempty"`
 }
 
-// AudienceType 推送目标
+// RequestAudienceType 推送目标
 type AudienceType string
 
 const (
 	// AdAll 全量推送
-	AdAll AudienceType = "all"
+	AdTypeAll AudienceType = "all"
 	// AdTag 标签推送
-	AdTag AudienceType = "tag"
+	AdTypeTag AudienceType = "tag"
 	// AdToken  单设备推送
-	AdToken AudienceType = "token"
+	AdTypeToken AudienceType = "token"
 	// AdTokenList  设备列表推送
-	AdTokenList AudienceType = "token_list"
-	// AdAccount 单账号推送
-	AdAccount AudienceType = "account"
+	AdTypeTokenList AudienceType = "token_list"
+	// AdTypeAccount 单账号推送
+	AdTypeAccount AudienceType = "account"
 	// AdAccountList 账号列表推送
-	AdAccountList AudienceType = "account_list"
+	AdTypeAccountList AudienceType = "account_list"
 )
 
 // Platform push API platform参数
@@ -56,7 +65,7 @@ type Platform string
 
 const (
 	// PlatformAll 全平台推送
-	PlatformAll Platform = "all"
+	//PlatformAll Platform = "all"
 	// PlatformAndroid 安卓推送
 	PlatformAndroid Platform = "android"
 	// PlatformiOS 苹果推送
@@ -76,23 +85,23 @@ const (
 // Request push API 必要参数
 type Request struct {
 	// 受众类型，见AudienceType类型
-	AudienceType AudienceType `json:"audience_type"`
+	AudienceType `json:"audience_type"`
 	// 推送平台，见Platform类型
-	Platform Platform `json:"platform"`
+	Platform `json:"platform"`
 	// 消息内容
-	Message Message `json:"message"`
+	Message `json:"message"`
 	// 消息类型，见MessageType类型
-	MessageType MessageType `json:"message_type"`
+	MessageType `json:"message_type"`
 
 	// 当AudienceType == AdTag时必填
-	TagList *TagList `json:"tag_list,omitempty"`
+	TagList `json:"tag_list,omitempty"`
 	// 当AudienceType == AdToken 或 AdTokenList 时必填的参数，
 	// 当AdToken时即使传了多个token，也只有第一个会被推送
 	// 当AdTokenList时，最多支持1000个token，同时push_id第一次请求时必须填0
 	// 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
 	// 则会使用跟123相同的文案推送
 	TokenList []string `json:"token_list,omitempty"`
-	// 当AudienceType == AdAccount 或 AdAccountList 时必填的参数，
+	// 当AudienceType == AdTypeAccount 或 AdAccountList 时必填的参数，
 	// 当AdAccount时即使传了多个token，也只有第一个会被推送
 	// 当AdAccountList时，最多支持1000个token，同时push_id第一次请求时必须填0
 	// 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
@@ -145,16 +154,97 @@ type Request struct {
 	// 并且返回对应的pushid：123，后续推送push_id 填123(同一个文案）
 	// 表示使用与123 id 对应的文案进行推送。(注：文案的有效时间由前面的expire_time 字段决定）
 	PushID string `json:"push_id,omitempty"`
+
+	nextIndex int `json:"-"` //如果推送的account,token大于1000,需要轮询推送
 }
 
-// TagListOperation 标签推送参数的逻辑操作符
-type TagListOperation string
+func (rst *Request) RenderOptions(opts ...ReqOption) error {
+	for _, opt := range opts {
+		err := opt(rst)
+		return err
+	}
+	return nil
+}
+func (rst *Request) clone(options ...ReqOption) (Request, error) {
+	request := Request{
+		AudienceType: rst.AudienceType,
+		Platform:     rst.Platform,
+		Message:      rst.Message,
+		MessageType:  rst.MessageType,
+		TagList:      rst.TagList,
+		TokenList:    rst.TokenList,
+		AccountList:  rst.AccountList,
+		ExpireTime:   rst.ExpireTime,
+		SendTime:     rst.SendTime,
+		MultiPkg:     rst.MultiPkg,
+		LoopTimes:    rst.LoopTimes,
+		Environment:  rst.Environment,
+		StatTag:      rst.StatTag,
+		Seq:          rst.Seq,
+		AccountType:  rst.AccountType,
+		PushID:       rst.PushID}
+	err := request.RenderOptions(options...)
+	return request, err
+}
+func sliceAccountList(rst *Request) error {
+	lens := len(rst.AccountList)
+	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
+		end := rst.nextIndex + 1000
+		if end > lens {
+			end = lens - rst.nextIndex
+		}
+		rst.AccountList = rst.AccountList[rst.nextIndex:end]
+		return nil
+	} else {
+		return errors.New("index out of range!")
+	}
+}
+func sliceTokenList(rst *Request) error {
+	lens := len(rst.TokenList)
+	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
+		end := rst.nextIndex + 1000
+		if end > lens {
+			end = lens - rst.nextIndex
+		}
+		rst.TokenList = rst.TokenList[rst.nextIndex:end]
+		rst.nextIndex = end
+		return nil
+	} else {
+		return errors.New("index out of range!")
+	}
+}
+func (rst *Request) nextRequest() (Request, error) {
+	var request Request
+	var er error = nil
+	if rst.AudienceType == AdTypeAccountList {
+		request, er = rst.clone(sliceAccountList)
+	} else if rst.AudienceType == AdTypeTokenList {
+		request, er = rst.clone(sliceTokenList)
+	}
+	return request, er
+}
+
+func (rst Request) toHttpRequest() (request *http.Request, err error) {
+
+	bodyBytes, err := json.Marshal(rst)
+	if err != nil {
+		return nil, err
+	}
+	request, err = http.NewRequest("POST", XingeURL, bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+// TagOpration 标签推送参数的逻辑操作符
+type TagOpration string
 
 const (
-	// TagListOpAnd 推送tag1且tag2
-	TagListOpAnd TagListOperation = "AND"
-	// TagListOpOr 推送tag1或tag2
-	TagListOpOr TagListOperation = "OR"
+	// OprationAnd 推送tag1且tag2
+	OprationAnd TagOpration = "AND"
+	// OprationOr 推送tag1或tag2
+	OprationOr TagOpration = "OR"
 )
 
 // TagList 标签推送参数
@@ -162,7 +252,7 @@ type TagList struct {
 	// 标签
 	Tags []string `json:"tags"`
 	// 标签逻辑操作符
-	Operation TagListOperation `json:"op"`
+	TagOpration `json:"op"`
 }
 
 // Message 消息体

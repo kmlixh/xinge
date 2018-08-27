@@ -1,4 +1,4 @@
-package auth
+package xinge
 
 import (
 	"encoding/base64"
@@ -10,6 +10,7 @@ import (
 type Auther struct {
 	AppID     string
 	SecretKey string
+	Platform
 }
 
 // Auth 添加一些默认的请求头
