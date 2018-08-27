@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -99,7 +100,7 @@ type PushRequest struct {
 	MessageType `json:"message_type"`
 
 	// 当AudienceType == AdTag时必填
-	TagList `json:"tag_list,omitempty"`
+	TagList TagList `json:"tag_list,omitempty"`
 	// 当AudienceType == AdToken 或 AdTokenList 时必填的参数，
 	// 当AdToken时即使传了多个token，也只有第一个会被推送
 	// 当AdTokenList时，最多支持1000个token，同时push_id第一次请求时必须填0
@@ -167,6 +168,7 @@ type IPushRequest interface {
 	clone(options ...ReqOption) IPushRequest
 	nextRequest() IPushRequest
 	toHttpRequest(auther Auther) (request *http.Request, err error)
+	IsPlatform(platform Platform) bool
 }
 
 func (rst *PushRequest) RenderOptions(opts ...ReqOption) error {
@@ -207,9 +209,15 @@ func (rst *PushRequest) nextRequest() IPushRequest {
 	} else if rst.AudienceType == AdTypeTokenList {
 		request = rst.clone(sliceTokenList)
 	} else if rst.nextIndex == 0 {
+		rst.nextIndex = -1
 		return rst
+	} else {
+		request = nil
 	}
 	return request
+}
+func (rst *PushRequest) IsPlatform(platform Platform) bool {
+	return rst.Platform == platform
 }
 
 func (rst PushRequest) toHttpRequest(auther Auther) (request *http.Request, err error) {
@@ -218,6 +226,7 @@ func (rst PushRequest) toHttpRequest(auther Auther) (request *http.Request, err 
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(string(bodyBytes))
 	request, err = http.NewRequest("POST", XingeURL, bytes.NewReader(bodyBytes))
 	if err != nil {
 		return nil, err

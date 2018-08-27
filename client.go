@@ -21,14 +21,14 @@ type XingeClient struct {
 	Client      *http.Client
 }
 
-func (client XingeClient) Push(rst *PushRequest) CommonRsp {
+func (client XingeClient) Push(rst IPushRequest) CommonRsp {
 	var commonRsp CommonRsp
 	temp := rst.nextRequest()
 	pushId := "0"
 	for ; temp != nil; temp = rst.nextRequest() {
 		temp.RenderOptions(PushIDOpt(pushId))
 		var httpRequest *http.Request
-		if rst.Platform == PlatformAndroid {
+		if rst.IsPlatform(PlatformAndroid) {
 			httpRequest, _ = temp.toHttpRequest(client.AndroidAuth)
 		} else {
 			httpRequest, _ = temp.toHttpRequest(client.IOSAuth)
@@ -42,14 +42,15 @@ func (client XingeClient) Push(rst *PushRequest) CommonRsp {
 			}
 		}
 	}
+
 	return commonRsp
 }
 func (client XingeClient) MarshalResp(resp *http.Response) CommonRsp {
-	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	r := CommonRsp{}
 	json.Unmarshal(body, &r)
+	resp.Body.Close()
 	return r
 }
 
