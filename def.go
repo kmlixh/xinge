@@ -294,19 +294,19 @@ type Message struct {
 // AndroidParams 安卓push参数
 type AndroidParams struct {
 	// TODO: doc these
-	NID           int                     `json:"n_id,omitempty"`
-	BuilderID     int                     `json:"builder_id,omitempty"`
-	Ring          int                     `json:"ring,omitempty"`
-	RingRaw       string                  `json:"ring_raw,omitempty"`
-	Vibrate       int                     `json:"vibrate,omitempty"`
-	Lights        int                     `json:"lights,omitempty"`
-	Clearable     int                     `json:"clearable,omitempty"`
-	IconType      int                     `json:"icon_type,omitempty"`
-	IconRes       string                  `json:"icon_res,omitempty"`
-	StyleID       int                     `json:"style_id,omitempty"`
-	SmallIcon     int                     `json:"small_icon,omitempty"`
-	Action        *map[string]interface{} `json:"action,omitempty"`
-	CustomContent *map[string]string      `json:"custom_content,omitempty"`
+	NID           int                    `json:"n_id,omitempty"`
+	BuilderID     int                    `json:"builder_id,omitempty"`
+	Ring          int                    `json:"ring,omitempty"`
+	RingRaw       string                 `json:"ring_raw,omitempty"`
+	Vibrate       int                    `json:"vibrate,omitempty"`
+	Lights        int                    `json:"lights,omitempty"`
+	Clearable     int                    `json:"clearable,omitempty"`
+	IconType      int                    `json:"icon_type,omitempty"`
+	IconRes       string                 `json:"icon_res,omitempty"`
+	StyleID       int                    `json:"style_id,omitempty"`
+	SmallIcon     int                    `json:"small_icon,omitempty"`
+	Action        map[string]interface{} `json:"action,omitempty"`
+	CustomContent map[string]string      `json:"custom_content,omitempty"`
 }
 
 // IOSParams iOS push参数
