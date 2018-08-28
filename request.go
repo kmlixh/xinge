@@ -1,12 +1,12 @@
 package xinge
 
-func NewSingleTokenRequest(platform Platform, token string, title string, content string) IPushRequest {
+func NewSingleTokenRequest(platform Platform, msgType MessageType, token string, title string, content string) IPushRequest {
 	return &PushRequest{
 		Platform:     platform,
 		AudienceType: AdTypeToken,
 		TokenList:    []string{token},
 		PushID:       "0",
-		MessageType:  MsgTypeMessage,
+		MessageType:  msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,

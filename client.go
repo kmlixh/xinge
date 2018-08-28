@@ -26,7 +26,7 @@ func (client XingeClient) Push(rst IPushRequest) CommonRsp {
 	temp := rst.nextRequest()
 	pushId := "0"
 	for ; temp != nil; temp = rst.nextRequest() {
-		temp.RenderOptions(PushIDOpt(pushId))
+		temp.RenderOptions(OptionPushID(pushId))
 		var httpRequest *http.Request
 		if rst.IsPlatform(PlatformAndroid) {
 			httpRequest, _ = temp.toHttpRequest(client.AndroidAuth)

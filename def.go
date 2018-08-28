@@ -100,7 +100,7 @@ type PushRequest struct {
 	MessageType `json:"message_type"`
 
 	// 当AudienceType == AdTag时必填
-	TagList TagList `json:"tag_list,omitempty"`
+	TagList *TagList `json:"tag_list,omitempty"`
 	// 当AudienceType == AdToken 或 AdTokenList 时必填的参数，
 	// 当AdToken时即使传了多个token，也只有第一个会被推送
 	// 当AdTokenList时，最多支持1000个token，同时push_id第一次请求时必须填0
@@ -294,19 +294,19 @@ type Message struct {
 // AndroidParams 安卓push参数
 type AndroidParams struct {
 	// TODO: doc these
-	NID           int                    `json:"n_id,omitempty"`
-	BuilderID     int                    `json:"builder_id,omitempty"`
-	Ring          int                    `json:"ring,omitempty"`
-	RingRaw       string                 `json:"ring_raw,omitempty"`
-	Vibrate       int                    `json:"vibrate,omitempty"`
-	Lights        int                    `json:"lights,omitempty"`
-	Clearable     int                    `json:"clearable,omitempty"`
-	IconType      int                    `json:"icon_type,omitempty"`
-	IconRes       string                 `json:"icon_res,omitempty"`
-	StyleID       int                    `json:"style_id,omitempty"`
-	SmallIcon     int                    `json:"small_icon,omitempty"`
-	Action        map[string]interface{} `json:"action,omitempty"`
-	CustomContent map[string]string      `json:"custom_content,omitempty"`
+	NID           int                     `json:"n_id,omitempty"`
+	BuilderID     int                     `json:"builder_id,omitempty"`
+	Ring          int                     `json:"ring,omitempty"`
+	RingRaw       string                  `json:"ring_raw,omitempty"`
+	Vibrate       int                     `json:"vibrate,omitempty"`
+	Lights        int                     `json:"lights,omitempty"`
+	Clearable     int                     `json:"clearable,omitempty"`
+	IconType      int                     `json:"icon_type,omitempty"`
+	IconRes       string                  `json:"icon_res,omitempty"`
+	StyleID       int                     `json:"style_id,omitempty"`
+	SmallIcon     int                     `json:"small_icon,omitempty"`
+	Action        *map[string]interface{} `json:"action,omitempty"`
+	CustomContent *map[string]string      `json:"custom_content,omitempty"`
 }
 
 // IOSParams iOS push参数
