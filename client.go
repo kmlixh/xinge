@@ -31,7 +31,7 @@ func (client XgClient) Push(rst IPushMsg) CommonRsp {
 	for ; temp != nil; temp = rst.nextRequest() {
 		temp.RenderOptions(OptionPushID(pushId))
 		var httpRequest *http.Request
-		if rst.EqualsPlatform(PlatformAndroid) {
+		if rst.equalsPlatform(PlatformAndroid) {
 			httpRequest, _ = temp.toHttpRequest(client.Android)
 		} else {
 			httpRequest, _ = temp.toHttpRequest(client.IOS)

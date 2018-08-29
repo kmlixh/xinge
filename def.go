@@ -173,7 +173,7 @@ type IPushMsg interface {
 	clone(options ...PushMsgOption) IPushMsg
 	nextRequest() IPushMsg
 	toHttpRequest(author Authorization) (request *http.Request, err error)
-	EqualsPlatform(platform Platform) bool
+	equalsPlatform(platform Platform) bool
 }
 
 //RenderOptions 使用Option来动态修改PushMsg的内容
@@ -222,7 +222,9 @@ func (rst *PushMsg) nextRequest() IPushMsg {
 	}
 	return request
 }
-func (rst *PushMsg) EqualsPlatform(platform Platform) bool {
+
+//equalsPlatform 比较Platform是否一致
+func (rst *PushMsg) equalsPlatform(platform Platform) bool {
 	return rst.Platform == platform
 }
 
