@@ -33,7 +33,8 @@ func PushURL(url string) {
 	XingeURL = url
 }
 
-type ReqOption func(*PushRequest) error
+//PushMsgOption Option函数的原型
+type PushMsgOption func(*PushMsg) error
 
 // CommonRsp 信鸽推送接口的通用基础返回值
 type CommonRsp struct {
@@ -51,7 +52,7 @@ type CommonRsp struct {
 	Result map[string]string `json:"result,omitempty"`
 }
 
-// RequestAudienceType 推送目标
+// AudienceType 推送目标
 type AudienceType string
 
 const (
@@ -88,8 +89,8 @@ const (
 	MsgTypeMessage MessageType = "message"
 )
 
-// PushRequest push API 必要参数
-type PushRequest struct {
+// PushMsg push API 必要参数
+type PushMsg struct {
 	// 受众类型，见AudienceType类型
 	AudienceType `json:"audience_type"`
 	// 推送平台，见Platform类型
@@ -163,23 +164,23 @@ type PushRequest struct {
 	//如果推送的account,token大于1000,需要轮询推送
 	nextIndex int
 }
-type IPushRequest interface {
-	RenderOptions(opts ...ReqOption) error
-	clone(options ...ReqOption) IPushRequest
-	nextRequest() IPushRequest
-	toHttpRequest(auther Authorization) (request *http.Request, err error)
+type IPushMessage interface {
+	RenderOptions(opts ...PushMsgOption) error
+	clone(options ...PushMsgOption) IPushMessage
+	nextRequest() IPushMessage
+	toHttpRequest(author Authorization) (request *http.Request, err error)
 	IsPlatform(platform Platform) bool
 }
 
-func (rst *PushRequest) RenderOptions(opts ...ReqOption) error {
+func (rst *PushMsg) RenderOptions(opts ...PushMsgOption) error {
 	for _, opt := range opts {
 		err := opt(rst)
 		return err
 	}
 	return nil
 }
-func (rst *PushRequest) clone(options ...ReqOption) IPushRequest {
-	request := PushRequest{
+func (rst *PushMsg) clone(options ...PushMsgOption) IPushMessage {
+	request := PushMsg{
 		AudienceType: rst.AudienceType,
 		Platform:     rst.Platform,
 		Message:      rst.Message,
@@ -202,8 +203,8 @@ func (rst *PushRequest) clone(options ...ReqOption) IPushRequest {
 	}
 	return &request
 }
-func (rst *PushRequest) nextRequest() IPushRequest {
-	var request IPushRequest
+func (rst *PushMsg) nextRequest() IPushMessage {
+	var request IPushMessage
 	if rst.AudienceType == AdTypeAccountList {
 		request = rst.clone(sliceAccountList)
 	} else if rst.AudienceType == AdTypeTokenList {
@@ -216,11 +217,11 @@ func (rst *PushRequest) nextRequest() IPushRequest {
 	}
 	return request
 }
-func (rst *PushRequest) IsPlatform(platform Platform) bool {
+func (rst *PushMsg) IsPlatform(platform Platform) bool {
 	return rst.Platform == platform
 }
 
-func (rst PushRequest) toHttpRequest(auther Authorization) (request *http.Request, err error) {
+func (rst PushMsg) toHttpRequest(author Authorization) (request *http.Request, err error) {
 
 	bodyBytes, err := json.Marshal(rst)
 	if err != nil {
@@ -234,7 +235,7 @@ func (rst PushRequest) toHttpRequest(auther Authorization) (request *http.Reques
 	auther.Auth(request)
 	return
 }
-func sliceAccountList(rst *PushRequest) error {
+func sliceAccountList(rst *PushMsg) error {
 	lens := len(rst.AccountList)
 	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
 		end := rst.nextIndex + 1000
@@ -247,7 +248,7 @@ func sliceAccountList(rst *PushRequest) error {
 		return errors.New("index out of range!")
 	}
 }
-func sliceTokenList(rst *PushRequest) error {
+func sliceTokenList(rst *PushMsg) error {
 	lens := len(rst.TokenList)
 	if lens > rst.nextIndex { //大于1000需要二次提交,如果此处长度大于nextIndex,则说明还有(account或者token没有推送)
 		end := rst.nextIndex + 1000
@@ -300,7 +301,7 @@ type AndroidParams struct {
 	RingRaw       string                 `json:"ring_raw,omitempty"`
 	Vibrate       int                    `json:"vibrate,omitempty"`
 	Lights        int                    `json:"lights,omitempty"`
-	Clearable     int                    `json:"clearable,omitempty"`
+	Cleanable     int                    `json:"clearable,omitempty"`
 	IconType      int                    `json:"icon_type,omitempty"`
 	IconRes       string                 `json:"icon_res,omitempty"`
 	StyleID       int                    `json:"style_id,omitempty"`

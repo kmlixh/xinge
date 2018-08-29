@@ -16,13 +16,14 @@ TODO List
 
 */
 
-type XingeClient struct {
+type XgClient struct {
 	Android Authorization
 	IOS     Authorization
 	Client  *http.Client
 }
 
-func (client XingeClient) Push(rst IPushRequest) CommonRsp {
+//Push 推送消息
+func (client XgClient) Push(rst IPushMessage) CommonRsp {
 	var commonRsp CommonRsp
 	temp := rst.nextRequest()
 	pushId := "0"
@@ -46,7 +47,9 @@ func (client XingeClient) Push(rst IPushRequest) CommonRsp {
 
 	return commonRsp
 }
-func (client XingeClient) MarshalResp(resp *http.Response) CommonRsp {
+
+//MarshalResp 解析返回
+func (client XgClient) MarshalResp(resp *http.Response) CommonRsp {
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	r := CommonRsp{}
@@ -55,7 +58,7 @@ func (client XingeClient) MarshalResp(resp *http.Response) CommonRsp {
 	return r
 }
 
-// New 创建一个新的默认http客户端
+//NewHttpClient 创建一个默认的http.Client
 func NewHttpClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{

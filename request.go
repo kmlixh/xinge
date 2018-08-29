@@ -1,6 +1,7 @@
 package xinge
 
-func NewTokenRequest(platform Platform, msgType MessageType, title string, content string, tokens ...string) IPushRequest {
+//NewTokenRequest
+func NewTokenRequest(platform Platform, msgType MessageType, title string, content string, tokens ...string) IPushMessage {
 	var tps AudienceType
 	lens := len(tokens)
 	if lens == 0 {
@@ -10,7 +11,7 @@ func NewTokenRequest(platform Platform, msgType MessageType, title string, conte
 	} else if lens > 1 {
 		tps = AdTypeTokenList
 	}
-	return &PushRequest{
+	return &PushMsg{
 		Platform:     platform,
 		AudienceType: tps,
 		TokenList:    tokens,
@@ -21,7 +22,9 @@ func NewTokenRequest(platform Platform, msgType MessageType, title string, conte
 			Content: content,
 		}}
 }
-func NewAccountRequest(platform Platform, msgType MessageType, title string, content string, accounts ...string) IPushRequest {
+
+//NewAccountRequest
+func NewAccountRequest(platform Platform, msgType MessageType, title string, content string, accounts ...string) IPushMessage {
 	var tps AudienceType
 	lens := len(accounts)
 	if lens == 0 {
@@ -31,7 +34,7 @@ func NewAccountRequest(platform Platform, msgType MessageType, title string, con
 	} else if lens > 1 {
 		tps = AdTypeAccountList
 	}
-	return &PushRequest{
+	return &PushMsg{
 		Platform:     platform,
 		AudienceType: tps,
 		AccountList:  accounts,
@@ -42,17 +45,23 @@ func NewAccountRequest(platform Platform, msgType MessageType, title string, con
 			Content: content,
 		}}
 }
-func NewTokenNotifyRequest(platform Platform, title string, content string, tokens ...string) IPushRequest {
+
+//NewTokenNotifyRequest
+func NewTokenNotifyRequest(platform Platform, title string, content string, tokens ...string) IPushMessage {
 	return NewTokenRequest(platform, MsgTypeNotify, title, content, tokens...)
 }
-func NewAccountNotifyRequest(platform Platform, title string, content string, accounts ...string) IPushRequest {
+
+//NewAccountNotifyRequest
+func NewAccountNotifyRequest(platform Platform, title string, content string, accounts ...string) IPushMessage {
 	return NewAccountRequest(platform, MsgTypeNotify, title, content, accounts...)
 }
-func NewTagRequest(platform Platform, msgType MessageType, title string, content string, tagOpt TagOpration, tags ...string) IPushRequest {
+
+//NewTagRequest
+func NewTagRequest(platform Platform, msgType MessageType, title string, content string, tagOpt TagOpration, tags ...string) IPushMessage {
 	if len(tags) == 0 {
 		return nil
 	} else {
-		return &PushRequest{
+		return &PushMsg{
 			Platform:     platform,
 			AudienceType: AdTypeTag,
 			TagList:      &TagList{tags, tagOpt},
@@ -64,11 +73,15 @@ func NewTagRequest(platform Platform, msgType MessageType, title string, content
 			}}
 	}
 }
-func NewTagNotifyRequest(platform Platform, title string, content string, tagOpt TagOpration, tags ...string) IPushRequest {
+
+//NewTagNotifyRequest
+func NewTagNotifyRequest(platform Platform, title string, content string, tagOpt TagOpration, tags ...string) IPushMessage {
 	return NewTagRequest(platform, MsgTypeNotify, title, content, tagOpt, tags...)
 }
-func NewPushAllRequest(platform Platform, msgType MessageType, title string, content string) IPushRequest {
-	return &PushRequest{
+
+//NewPushAllRequest
+func NewPushAllRequest(platform Platform, msgType MessageType, title string, content string) IPushMessage {
+	return &PushMsg{
 		Platform:     platform,
 		AudienceType: AdTypeAll,
 		PushID:       "0",
@@ -78,6 +91,8 @@ func NewPushAllRequest(platform Platform, msgType MessageType, title string, con
 			Content: content,
 		}}
 }
-func NewPushAllNotifyRequest(platform Platform, title string, content string) IPushRequest {
+
+//NewPushAllNotifyRequest
+func NewPushAllNotifyRequest(platform Platform, title string, content string) IPushMessage {
 	return NewPushAllRequest(platform, MsgTypeNotify, title, content)
 }
