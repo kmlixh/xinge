@@ -173,10 +173,10 @@ type IPushMsg interface {
 	clone(options ...PushMsgOption) IPushMsg
 	nextRequest() IPushMsg
 	toHttpRequest(author Authorization) (request *http.Request, err error)
-	IsPlatform(platform Platform) bool
+	EqualsPlatform(platform Platform) bool
 }
 
-//RenderOptions
+//RenderOptions 使用Option来动态修改PushMsg的内容
 func (rst *PushMsg) RenderOptions(opts ...PushMsgOption) error {
 	for _, opt := range opts {
 		err := opt(rst)
@@ -216,13 +216,13 @@ func (rst *PushMsg) nextRequest() IPushMsg {
 		request = rst.clone(sliceTokenList)
 	} else if rst.nextIndex == 0 {
 		rst.nextIndex = -1
-		return rst
+		request = rst
 	} else {
 		request = nil
 	}
 	return request
 }
-func (rst *PushMsg) IsPlatform(platform Platform) bool {
+func (rst *PushMsg) EqualsPlatform(platform Platform) bool {
 	return rst.Platform == platform
 }
 
@@ -249,9 +249,8 @@ func sliceAccountList(rst *PushMsg) error {
 		}
 		rst.AccountList = rst.AccountList[rst.nextIndex:end]
 		return nil
-	} else {
-		return errors.New("index out of range!")
 	}
+	return errors.New("index out of range!")
 }
 func sliceTokenList(rst *PushMsg) error {
 	lens := len(rst.TokenList)
@@ -263,9 +262,8 @@ func sliceTokenList(rst *PushMsg) error {
 		rst.TokenList = rst.TokenList[rst.nextIndex:end]
 		rst.nextIndex = end
 		return nil
-	} else {
-		return errors.New("index out of range!")
 	}
+	return errors.New("index out of range!")
 }
 
 // TagOperation 标签推送参数的逻辑操作符
