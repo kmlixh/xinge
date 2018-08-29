@@ -6,14 +6,14 @@ import (
 	"net/http"
 )
 
-// Auther 用来添加请求Authorization
-type Auther struct {
+// Authorization 用来添加请求Authorization
+type Authorization struct {
 	AppID     string
 	SecretKey string
 }
 
 // Auth 添加一些默认的请求头
-func (a *Auther) Auth(req *http.Request) {
+func (a *Authorization) Auth(req *http.Request) {
 	// TODO: 全平台发送时如何填写Auth header
 	req.Header.Add("Authorization", makeAuthHeader(a.AppID, a.SecretKey))
 	req.Header.Add("Content-Type", "application/json")

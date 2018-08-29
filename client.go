@@ -15,10 +15,11 @@ TODO List
 4.优化和改造业务逻辑(简化和优化业务展现流程)
 
 */
+
 type XingeClient struct {
-	AndroidAuth Auther
-	IOSAuth     Auther
-	Client      *http.Client
+	Android Authorization
+	IOS     Authorization
+	Client  *http.Client
 }
 
 func (client XingeClient) Push(rst IPushRequest) CommonRsp {
@@ -29,9 +30,9 @@ func (client XingeClient) Push(rst IPushRequest) CommonRsp {
 		temp.RenderOptions(OptionPushID(pushId))
 		var httpRequest *http.Request
 		if rst.IsPlatform(PlatformAndroid) {
-			httpRequest, _ = temp.toHttpRequest(client.AndroidAuth)
+			httpRequest, _ = temp.toHttpRequest(client.Android)
 		} else {
-			httpRequest, _ = temp.toHttpRequest(client.IOSAuth)
+			httpRequest, _ = temp.toHttpRequest(client.IOS)
 		}
 
 		if httpRequest != nil {

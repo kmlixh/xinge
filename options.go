@@ -3,13 +3,12 @@ package xinge
 import "time"
 
 // PlatformIOS 修改push平台为iOS
-func OptionPlatformiOS() ReqOption {
+func OptionPlatIos() ReqOption {
 	return OptionPlatform(PlatformiOS)
-
 }
 
 // PlatformAndroid 修改push平台为PlatformAndroid
-func OptionPlatformAndroid() ReqOption {
+func OptionPlatAndroid() ReqOption {
 	return OptionPlatform(PlatformAndroid)
 }
 

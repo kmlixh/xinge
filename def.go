@@ -161,13 +161,13 @@ type PushRequest struct {
 	// 表示使用与123 id 对应的文案进行推送。(注：文案的有效时间由前面的expire_time 字段决定）
 	PushID string `json:"push_id,omitempty"`
 	//如果推送的account,token大于1000,需要轮询推送
-	nextIndex int `json:"-"`
+	nextIndex int
 }
 type IPushRequest interface {
 	RenderOptions(opts ...ReqOption) error
 	clone(options ...ReqOption) IPushRequest
 	nextRequest() IPushRequest
-	toHttpRequest(auther Auther) (request *http.Request, err error)
+	toHttpRequest(auther Authorization) (request *http.Request, err error)
 	IsPlatform(platform Platform) bool
 }
 
@@ -220,7 +220,7 @@ func (rst *PushRequest) IsPlatform(platform Platform) bool {
 	return rst.Platform == platform
 }
 
-func (rst PushRequest) toHttpRequest(auther Auther) (request *http.Request, err error) {
+func (rst PushRequest) toHttpRequest(auther Authorization) (request *http.Request, err error) {
 
 	bodyBytes, err := json.Marshal(rst)
 	if err != nil {
