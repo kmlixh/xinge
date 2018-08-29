@@ -160,8 +160,8 @@ type PushRequest struct {
 	// 并且返回对应的pushid：123，后续推送push_id 填123(同一个文案）
 	// 表示使用与123 id 对应的文案进行推送。(注：文案的有效时间由前面的expire_time 字段决定）
 	PushID string `json:"push_id,omitempty"`
-
-	nextIndex int `json:"-"` //如果推送的account,token大于1000,需要轮询推送
+	//如果推送的account,token大于1000,需要轮询推送
+	nextIndex int `json:"-"`
 }
 type IPushRequest interface {
 	RenderOptions(opts ...ReqOption) error
@@ -317,11 +317,13 @@ type IOSParams struct {
 
 // Aps 通知栏iOS消息的aps字段，详情请参照苹果文档
 type Aps struct {
-	Alert            map[string]string `json:"alert,omitempty"`
-	Badge            int               `json:"badge,omitempty"`
-	Category         string            `json:"category,omitempty"`
-	ContentAvailable int               `json:"content-available,omitempty"`
-	Sound            string            `json:"sound,omitempty"`
+	Alert            `json:"alert,omitempty"`
+	Badge            int    `json:"badge,omitempty"`
+	Category         string `json:"category,omitempty"`
+	ContentAvailable int    `json:"content-available,omitempty"`
+	Sound            string `json:"sound,omitempty"`
 }
+
+type Alert map[string]string
 
 // TODO: error type constant
