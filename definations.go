@@ -2,6 +2,7 @@ package xinge
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -234,7 +235,6 @@ func (rst PushMsg) toHttpRequest(author Authorization) (request *http.Request, e
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(bodyBytes))
 	request, err = http.NewRequest("POST", XingeURL, bytes.NewReader(bodyBytes))
 	if err != nil {
 		return nil, err
@@ -333,3 +333,25 @@ type Aps struct {
 type Alert map[string]string
 
 // TODO: error type constant
+
+// Authorization 用来添加请求Authorization
+type Authorization struct {
+	AppID     string
+	SecretKey string
+}
+
+// Auth 添加一些默认的请求头
+func (a *Authorization) Auth(req *http.Request) {
+	req.Header.Add("Authorization", makeAuthHeader(a.AppID, a.SecretKey))
+	req.Header.Add("Content-Type", "application/json")
+}
+
+// makeAuthHeader 根据appid和secretKey拼接并base64encode
+func makeAuthHeader(appID, secretKey string) string {
+	base64Str := base64.StdEncoding.EncodeToString(
+		[]byte(
+			fmt.Sprintf("%s:%s", appID, secretKey),
+		),
+	)
+	return fmt.Sprintf("Basic %s", base64Str)
+}

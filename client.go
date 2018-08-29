@@ -24,19 +24,22 @@ type XgClient struct {
 }
 
 //Push 推送消息
-func (client XgClient) Push(rst IPushMsg) CommonRsp {
+func (client XgClient) Push(msg IPushMsg) CommonRsp {
+	if msg.equalsPlatform(PlatformAndroid) {
+		return client.PushWithAuthor(msg, client.Android)
+	}
+	return client.PushWithAuthor(msg, client.IOS)
+}
+
+//PushWithAuthor 使用自定义的Authorization信息进行推送
+func (client XgClient) PushWithAuthor(msg IPushMsg, author Authorization) CommonRsp {
 	var commonRsp CommonRsp
-	temp := rst.nextRequest()
+	temp := msg.nextRequest()
 	pushId := "0"
-	for ; temp != nil; temp = rst.nextRequest() {
+	for ; temp != nil; temp = msg.nextRequest() {
 		temp.RenderOptions(OptionPushID(pushId))
 		var httpRequest *http.Request
-		if rst.equalsPlatform(PlatformAndroid) {
-			httpRequest, _ = temp.toHttpRequest(client.Android)
-		} else {
-			httpRequest, _ = temp.toHttpRequest(client.IOS)
-		}
-
+		httpRequest, _ = temp.toHttpRequest(author)
 		if httpRequest != nil {
 			resp, _ := client.Client.Do(httpRequest)
 			commonRsp = client.MarshalResp(resp)

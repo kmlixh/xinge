@@ -1,44 +1,44 @@
-# xinge
+# 腾讯信鸽Golang SDK（非官方版本）
 
 [![Go Report Card](https://goreportcard.com/badge/gitee.com/kmlixh/xinge)](https://goreportcard.com/report/gitee.com/kmlixh/xinge)
 [![GoDoc](https://godoc.org/gitee.com/kmlixh/xinge?status.svg)](https://godoc.org/gitee.com/kmlixh/xinge)
 
-腾讯信鸽push Golang lib
+### 前言
 
-`信鸽v3版API的简单封装`
+`原本想使用信鸽官方推荐的 [FrontMage大神](https://github.com/FrontMage/xinge) 编写的库，但是发现有些地方还是不太好用，然后就自己动手改了一下，越改越多，慢慢发现和大神们的代码基本上不同了，索性就单独发布出来，提供给大家！`
 
 ## 用法
 
 ### 安装
-`$ go get github.com/FrontMage/xinge`
+`$ go get gitee.com/kmlixh/xinge`
 
-### 安卓单账号push
+### 全局推送
 ```go
+package xinge
+
 import (
-    "net/http"
-    "io/ioutil"
-    "encoding/json"
-    "fmt"
-    "github.com/FrontMage/xinge"
-    "github.com/FrontMage/xinge/req"
-    "github.com/FrontMage/xinge/auth"
+	"testing"
+	"time"
 )
 
-func main() {
-    auther := auth.Auther{AppID: "AppID", SecretKey: "SecretKey"}
-    pushReq, _ := req.NewSingleAndroidAccountPush("account", "title", "content")
-    auther.Auth(pushReq)
+var authorAndroid = Authorization{AppID:"085f557303c8b", SecretKey:"046cf0c53a1bf6683bb22020a0ed8fec"}
+var authoriOS = Authorization{AppID:"d5089ed7c3200", SecretKey:"d46a1b7d9d5327df90519d758cee8a1d"}
+var xgClient = XgClient{Android:authorAndroid, IOS:authoriOS, Client:NewHttpClient()}
 
-    c := &http.Client{}
-    rsp, _ := c.Do(pushReq)
-    defer rsp.Body.Close()
-    body, _ := ioutil.ReadAll(rsp.Body)
-
-    r := &xinge.CommonRsp{}
-    json.Unmarshal(body, r)
-    fmt.Printf("%+v", r)
+//测试推送一条面向全员的Notify消息
+func TestXgClient_Push(t *testing.T) {
+	//以下两个配置信息都是真实的，但是并未配置正确的客户端，此处仅用来测试服务器的返回是否一致
+	msg := NewPushAllNotifyPushMsg(PlatformAndroid, "测试的标题", "测试的内容"+time.Now().String())
+	resp := xgClient.Push(msg)
+	if resp.RetCode != 0 {
+		t.FailNow()
+	}
 }
 ```
+上述代码复制自example_test.go
+
+#### 基本用法解析：
+
 
 ### 苹果单账号push
 ```go
