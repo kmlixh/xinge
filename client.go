@@ -16,6 +16,7 @@ TODO List
 
 */
 
+//XgClient 用来推送消息，或者设置Tag的信鸽客户端
 type XgClient struct {
 	Android Authorization
 	IOS     Authorization
@@ -23,7 +24,7 @@ type XgClient struct {
 }
 
 //Push 推送消息
-func (client XgClient) Push(rst IPushMessage) CommonRsp {
+func (client XgClient) Push(rst IPushMsg) CommonRsp {
 	var commonRsp CommonRsp
 	temp := rst.nextRequest()
 	pushId := "0"

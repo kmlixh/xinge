@@ -246,9 +246,9 @@ func OptionMessage(m Message) PushMsgOption {
 }
 
 //OptionTagList
-func OptionTagList(op TagOpration, tags ...string) PushMsgOption {
+func OptionTagList(op TagOperation, tags ...string) PushMsgOption {
 	return func(r *PushMsg) error {
-		r.TagList = &TagList{Tags: tags, TagOpration: op}
+		r.TagList = &TagList{Tags: tags, TagOperation: op}
 		return nil
 	}
 }
@@ -366,9 +366,9 @@ func OptionPushID(pid string) PushMsgOption {
 }
 
 //OptionMessageType
-func OptionMessageType(t MessageType) PushMsgOption {
+func OptionMessageType(t MsgType) PushMsgOption {
 	return func(r *PushMsg) error {
-		r.MessageType = t
+		r.MsgType = t
 		return nil
 	}
 }

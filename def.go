@@ -56,122 +56,127 @@ type CommonRsp struct {
 type AudienceType string
 
 const (
-	// AdAll 全量推送
-	AdTypeAll AudienceType = "all"
-	// AdTag 标签推送
-	AdTypeTag AudienceType = "tag"
-	// AdToken  单设备推送
-	AdTypeToken AudienceType = "token"
-	// AdTokenList  设备列表推送
-	AdTypeTokenList AudienceType = "token_list"
-	// AdTypeAccount 单账号推送
-	AdTypeAccount AudienceType = "account"
-	// AdAccountList 账号列表推送
-	AdTypeAccountList AudienceType = "account_list"
+	// AudiTypeAll 全量推送
+	AudiTypeAll AudienceType = "all"
+	// AudiTypeTag 标签推送
+	AudiTypeTag AudienceType = "tag"
+	// AudiTypeToken  单设备推送
+	AudiTypeToken AudienceType = "token"
+	// AudiTypeTokenList  设备列表推送
+	AudiTypeTokenList AudienceType = "token_list"
+	// AudiTypeAccount 单账号推送
+	AudiTypeAccount AudienceType = "account"
+	// AudiTypeAccountList 账号列表推送
+	AudiTypeAccountList AudienceType = "account_list"
 )
 
 // Platform push API platform参数
 type Platform string
 
 const (
+	//PlatformAndroid Android推送平台标识
 	PlatformAndroid Platform = "android"
-	// PlatformiOS 苹果推送
+	// PlatformiOS 苹果推送平台标识
 	PlatformiOS Platform = "ios"
 )
 
-// MessageType push API message_type参数
-type MessageType string
+// MsgType push API message_type参数
+type MsgType string
 
 const (
-	// MsgTypeNotify 消息类型为通知栏消息
-	MsgTypeNotify MessageType = "notify"
-	// MsgTypeMessage 消息类型为透传消息(Android)/静默消息(iOS)
-	MsgTypeMessage MessageType = "message"
+	// MsgTypeOfNotify 消息类型为通知栏消息
+	MsgTypeOfNotify MsgType = "notify"
+	// MsgTypeOfMsg 消息类型为透传消息(Android)/静默消息(iOS)
+	MsgTypeOfMsg MsgType = "message"
 )
 
-// PushMsg push API 必要参数
+// PushMsg 推送的消息体
 type PushMsg struct {
-	// 受众类型，见AudienceType类型
+	//AudienceType 受众类型，见AudienceType类型
 	AudienceType `json:"audience_type"`
-	// 推送平台，见Platform类型
+	//Platform 推送平台，见Platform类型
 	Platform `json:"platform"`
-	// 消息内容
+	//Message 消息内容
 	Message `json:"message"`
-	// 消息类型，见MessageType类型
-	MessageType `json:"message_type"`
+	//MsgType 消息类型，见MessageType类型
+	MsgType `json:"message_type"`
 
-	// 当AudienceType == AdTag时必填
+	//TagList 当AudienceType == AdTag时必填
 	TagList *TagList `json:"tag_list,omitempty"`
-	// 当AudienceType == AdToken 或 AdTokenList 时必填的参数，
-	// 当AdToken时即使传了多个token，也只有第一个会被推送
-	// 当AdTokenList时，最多支持1000个token，同时push_id第一次请求时必须填0
-	// 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
-	// 则会使用跟123相同的文案推送
+	/*TokenList 当AudienceType == AdToken 或 AdTokenList 时必填的参数，
+	 当AdToken时即使传了多个token，也只有第一个会被推送
+	 当AdTokenList时，最多支持1000个token，同时push_id第一次请求时必须填0
+	 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
+	则会使用跟123相同的文案推送*/
 	TokenList []string `json:"token_list,omitempty"`
-	// 当AudienceType == AdTypeAccount 或 AdAccountList 时必填的参数，
+	//AccountList 当AudienceType == AudiTypeAccount 或 AdAccountList 时必填的参数，
 	// 当AdAccount时即使传了多个token，也只有第一个会被推送
 	// 当AdAccountList时，最多支持1000个token，同时push_id第一次请求时必须填0
 	// 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
-	// 则会使用跟123相同的文案推送
+	//AccountList 则会使用跟123相同的文案推送
 	AccountList []string `json:"account_list,omitempty"`
 
-	// 	消息离线存储时间（单位为秒）
+	//ExpireTime 	消息离线存储时间（单位为秒）
 	// 最长存储时间3天，若设置为0，则默认值（3天）
 	// 建议取值区间[600, 86400x3]
-	// 第三方通道离线保存消息不同厂商标准不同
+	//ExpireTime 第三方通道离线保存消息不同厂商标准不同
 	ExpireTime int `json:"expire_time,omitempty"`
 
-	// 	指定推送时间
+	//SendTime 	指定推送时间
 	// 格式为yyyy-MM-DD HH:MM:SS
 	// 若小于服务器当前时间，则会立即推送
-	// 仅全量推送和标签推送支持此字段
+	//SendTime 仅全量推送和标签推送支持此字段
 	SendTime string `json:"send_time,omitempty"`
 
-	// 	多包名推送
-	// 当app存在多个不同渠道包（例如应用宝、豌豆荚等），推送时如果是希望手机上安装任何一个渠道的app都能收到消息那么该值需要设置为true
+	//MultiPkg 	多包名推送
+	//MultiPkg 当app存在多个不同渠道包（例如应用宝、豌豆荚等），推送时如果是希望手机上安装任何一个渠道的app都能收到消息那么该值需要设置为true
 	MultiPkg bool `json:"multi_pkg,omitempty"`
 
-	// 	循环任务重复次数
+	//LoopTimes 	循环任务重复次数
 	// 仅支持全推、标签推
-	// 建议取值[1, 15]
+	//LoopTimes 建议取值[1, 15]
 	LoopTimes int `json:"loop_times,omitempty"`
 
-	// 	用户指定推送环境，仅限iOS平台推送使用
+	//Environment 	用户指定推送环境，仅限iOS平台推送使用
 	// product： 推送生产环境
-	// dev： 推送开发环境
+	//Environment dev： 推送开发环境
 	Environment CommonRspEnv `json:"environment,omitempty"`
 
-	// 	统计标签，用于聚合统计
+	//StatTag 	统计标签，用于聚合统计
 	// 使用场景(示例)：
 	// 现在有一个活动id：active_picture_123,需要给10000个设备通过单推接口（或者列表推送等推送形式）下发消息，同时设置该字段为active_picture_123
-	// 推送完成之后可以使用v3统计查询接口，根据该标签active_picture_123 查询这10000个设备的实发、抵达、展示、点击数据
+	//StatTag 推送完成之后可以使用v3统计查询接口，根据该标签active_picture_123 查询这10000个设备的实发、抵达、展示、点击数据
 	StatTag string `json:"stat_tag,omitempty"`
 
-	// 	接口调用时，在应答包中信鸽会回射该字段，可用于异步请求
-	// 使用场景：异步服务中可以通过该字段找到server端返回的对应应答包
+	//Seq 	接口调用时，在应答包中信鸽会回射该字段，可用于异步请求
+	//Seq 使用场景：异步服务中可以通过该字段找到server端返回的对应应答包
 	Seq int64 `json:"seq,omitempty"`
 
-	// 单账号推送时可选
+	//AccountType 单账号推送时可选
 	// 	 账号类型，参考后面账号说明。
-	//  必须与账号绑定时设定的账号类型一致
+	//AccountType  必须与账号绑定时设定的账号类型一致
 	AccountType int `json:"account_type,omitempty"`
 
+	//PushID
 	// 账号列表推送、设备列表推送时必需
 	// 账号列表推送和设备列表推送时，第一次推送该值填0，系统会创建对应的推送任务，
 	// 并且返回对应的pushid：123，后续推送push_id 填123(同一个文案）
 	// 表示使用与123 id 对应的文案进行推送。(注：文案的有效时间由前面的expire_time 字段决定）
 	PushID string `json:"push_id,omitempty"`
-	//如果推送的account,token大于1000,需要轮询推送
+	//nextIndex 如果推送的account,token大于1000,需要轮询推送,此标志用来作为遍历的游标
 	nextIndex int
 }
-type IPushMessage interface {
+
+//IPushMsg PushMsg实现的接口
+type IPushMsg interface {
 	RenderOptions(opts ...PushMsgOption) error
-	clone(options ...PushMsgOption) IPushMessage
-	nextRequest() IPushMessage
+	clone(options ...PushMsgOption) IPushMsg
+	nextRequest() IPushMsg
 	toHttpRequest(author Authorization) (request *http.Request, err error)
 	IsPlatform(platform Platform) bool
 }
 
+//RenderOptions
 func (rst *PushMsg) RenderOptions(opts ...PushMsgOption) error {
 	for _, opt := range opts {
 		err := opt(rst)
@@ -179,12 +184,12 @@ func (rst *PushMsg) RenderOptions(opts ...PushMsgOption) error {
 	}
 	return nil
 }
-func (rst *PushMsg) clone(options ...PushMsgOption) IPushMessage {
+func (rst *PushMsg) clone(options ...PushMsgOption) IPushMsg {
 	request := PushMsg{
 		AudienceType: rst.AudienceType,
 		Platform:     rst.Platform,
 		Message:      rst.Message,
-		MessageType:  rst.MessageType,
+		MsgType:      rst.MsgType,
 		TagList:      rst.TagList,
 		TokenList:    rst.TokenList,
 		AccountList:  rst.AccountList,
@@ -203,11 +208,11 @@ func (rst *PushMsg) clone(options ...PushMsgOption) IPushMessage {
 	}
 	return &request
 }
-func (rst *PushMsg) nextRequest() IPushMessage {
-	var request IPushMessage
-	if rst.AudienceType == AdTypeAccountList {
+func (rst *PushMsg) nextRequest() IPushMsg {
+	var request IPushMsg
+	if rst.AudienceType == AudiTypeAccountList {
 		request = rst.clone(sliceAccountList)
-	} else if rst.AudienceType == AdTypeTokenList {
+	} else if rst.AudienceType == AudiTypeTokenList {
 		request = rst.clone(sliceTokenList)
 	} else if rst.nextIndex == 0 {
 		rst.nextIndex = -1
@@ -232,7 +237,7 @@ func (rst PushMsg) toHttpRequest(author Authorization) (request *http.Request, e
 	if err != nil {
 		return nil, err
 	}
-	auther.Auth(request)
+	author.Auth(request)
 	return
 }
 func sliceAccountList(rst *PushMsg) error {
@@ -263,22 +268,22 @@ func sliceTokenList(rst *PushMsg) error {
 	}
 }
 
-// TagOpration 标签推送参数的逻辑操作符
-type TagOpration string
+// TagOperation 标签推送参数的逻辑操作符
+type TagOperation string
 
 const (
-	// OprationAnd 推送tag1且tag2
-	OprationAnd TagOpration = "AND"
-	// OprationOr 推送tag1或tag2
-	OprationOr TagOpration = "OR"
+	// TagOperationAnd 推送tag1且tag2
+	TagOperationAnd TagOperation = "AND"
+	// TagOperationOr 推送tag1或tag2
+	TagOperationOr TagOperation = "OR"
 )
 
 // TagList 标签推送参数
 type TagList struct {
-	// 标签
+	//Tags 标签
 	Tags []string `json:"tags"`
-	// 标签逻辑操作符
-	TagOpration `json:"op"`
+	//TagOperation 标签逻辑操作符
+	TagOperation `json:"op"`
 }
 
 // Message 消息体
@@ -325,6 +330,7 @@ type Aps struct {
 	Sound            string `json:"sound,omitempty"`
 }
 
+//Alert 自定义Alert的数据类型
 type Alert map[string]string
 
 // TODO: error type constant

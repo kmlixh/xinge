@@ -1,22 +1,22 @@
 package xinge
 
 //NewTokenRequest
-func NewTokenRequest(platform Platform, msgType MessageType, title string, content string, tokens ...string) IPushMessage {
+func NewTokenRequest(platform Platform, msgType MsgType, title string, content string, tokens ...string) IPushMsg {
 	var tps AudienceType
 	lens := len(tokens)
 	if lens == 0 {
 		return nil
 	} else if lens == 1 {
-		tps = AdTypeToken
+		tps = AudiTypeToken
 	} else if lens > 1 {
-		tps = AdTypeTokenList
+		tps = AudiTypeTokenList
 	}
 	return &PushMsg{
 		Platform:     platform,
 		AudienceType: tps,
 		TokenList:    tokens,
 		PushID:       "0",
-		MessageType:  msgType,
+		MsgType:      msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
@@ -24,22 +24,22 @@ func NewTokenRequest(platform Platform, msgType MessageType, title string, conte
 }
 
 //NewAccountRequest
-func NewAccountRequest(platform Platform, msgType MessageType, title string, content string, accounts ...string) IPushMessage {
+func NewAccountRequest(platform Platform, msgType MsgType, title string, content string, accounts ...string) IPushMsg {
 	var tps AudienceType
 	lens := len(accounts)
 	if lens == 0 {
 		return nil
 	} else if lens == 1 {
-		tps = AdTypeAccount
+		tps = AudiTypeAccount
 	} else if lens > 1 {
-		tps = AdTypeAccountList
+		tps = AudiTypeAccountList
 	}
 	return &PushMsg{
 		Platform:     platform,
 		AudienceType: tps,
 		AccountList:  accounts,
 		PushID:       "0",
-		MessageType:  msgType,
+		MsgType:      msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
@@ -47,26 +47,26 @@ func NewAccountRequest(platform Platform, msgType MessageType, title string, con
 }
 
 //NewTokenNotifyRequest
-func NewTokenNotifyRequest(platform Platform, title string, content string, tokens ...string) IPushMessage {
-	return NewTokenRequest(platform, MsgTypeNotify, title, content, tokens...)
+func NewTokenNotifyRequest(platform Platform, title string, content string, tokens ...string) IPushMsg {
+	return NewTokenRequest(platform, MsgTypeOfNotify, title, content, tokens...)
 }
 
 //NewAccountNotifyRequest
-func NewAccountNotifyRequest(platform Platform, title string, content string, accounts ...string) IPushMessage {
-	return NewAccountRequest(platform, MsgTypeNotify, title, content, accounts...)
+func NewAccountNotifyRequest(platform Platform, title string, content string, accounts ...string) IPushMsg {
+	return NewAccountRequest(platform, MsgTypeOfNotify, title, content, accounts...)
 }
 
 //NewTagRequest
-func NewTagRequest(platform Platform, msgType MessageType, title string, content string, tagOpt TagOpration, tags ...string) IPushMessage {
+func NewTagRequest(platform Platform, msgType MsgType, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
 	if len(tags) == 0 {
 		return nil
 	} else {
 		return &PushMsg{
 			Platform:     platform,
-			AudienceType: AdTypeTag,
+			AudienceType: AudiTypeTag,
 			TagList:      &TagList{tags, tagOpt},
 			PushID:       "0",
-			MessageType:  msgType,
+			MsgType:      msgType,
 			Message: Message{
 				Title:   title,
 				Content: content,
@@ -75,17 +75,17 @@ func NewTagRequest(platform Platform, msgType MessageType, title string, content
 }
 
 //NewTagNotifyRequest
-func NewTagNotifyRequest(platform Platform, title string, content string, tagOpt TagOpration, tags ...string) IPushMessage {
-	return NewTagRequest(platform, MsgTypeNotify, title, content, tagOpt, tags...)
+func NewTagNotifyRequest(platform Platform, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
+	return NewTagRequest(platform, MsgTypeOfNotify, title, content, tagOpt, tags...)
 }
 
 //NewPushAllRequest
-func NewPushAllRequest(platform Platform, msgType MessageType, title string, content string) IPushMessage {
+func NewPushAllRequest(platform Platform, msgType MsgType, title string, content string) IPushMsg {
 	return &PushMsg{
 		Platform:     platform,
-		AudienceType: AdTypeAll,
+		AudienceType: AudiTypeAll,
 		PushID:       "0",
-		MessageType:  msgType,
+		MsgType:      msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
@@ -93,6 +93,6 @@ func NewPushAllRequest(platform Platform, msgType MessageType, title string, con
 }
 
 //NewPushAllNotifyRequest
-func NewPushAllNotifyRequest(platform Platform, title string, content string) IPushMessage {
-	return NewPushAllRequest(platform, MsgTypeNotify, title, content)
+func NewPushAllNotifyRequest(platform Platform, title string, content string) IPushMsg {
+	return NewPushAllRequest(platform, MsgTypeOfNotify, title, content)
 }
