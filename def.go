@@ -291,15 +291,14 @@ type Message struct {
 	Title      string   `json:"title,omitempty"`
 	Content    string   `json:"content,omitempty"`
 	AcceptTime []string `json:"accept_time,omitempty"`
-
+	//Android推送的参数
 	Android *AndroidParams `json:"android,omitempty"`
-
+	//IOS推送的参数
 	IOS *IOSParams `json:"ios,omitempty"`
 }
 
 // AndroidParams 安卓push参数
 type AndroidParams struct {
-	// TODO: doc these
 	NID           int                    `json:"n_id,omitempty"`
 	BuilderID     int                    `json:"builder_id,omitempty"`
 	Ring          int                    `json:"ring,omitempty"`

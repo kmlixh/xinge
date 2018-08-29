@@ -68,7 +68,7 @@ func NewHttpClient() *http.Client {
 			IdleConnTimeout:     30 * time.Second,
 			DisableCompression:  false,
 			// 默认开启了keep-alive
-			DisableKeepAlives: false,
+			DisableKeepAlives: true,
 		},
 	}
 }
