@@ -1,6 +1,6 @@
 package xinge
 
-//NewTokenRequest 新建token类型的
+//NewTokenPushMsg 新建token类型的
 func NewTokenPushMsg(platform Platform, msgType MsgType, title string, content string, tokens ...string) IPushMsg {
 	var tps AudienceType
 	lens := len(tokens)
@@ -60,18 +60,17 @@ func NewAccountNotifyPushMsg(platform Platform, title string, content string, ac
 func NewTagPushMsg(platform Platform, msgType MsgType, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
 	if len(tags) == 0 {
 		return nil
-	} else {
-		return &PushMsg{
-			Platform:     platform,
-			AudienceType: AudiTypeTag,
-			TagList:      &TagList{tags, tagOpt},
-			PushID:       "0",
-			MsgType:      msgType,
-			Message: Message{
-				Title:   title,
-				Content: content,
-			}}
 	}
+	return &PushMsg{
+		Platform:     platform,
+		AudienceType: AudiTypeTag,
+		TagList:      &TagList{tags, tagOpt},
+		PushID:       "0",
+		MsgType:      msgType,
+		Message: Message{
+			Title:   title,
+			Content: content,
+		}}
 }
 
 //NewTagNotifyPushMsg 基于tag的notify类型的推送
