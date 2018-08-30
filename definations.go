@@ -2,19 +2,10 @@ package xinge
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
-
-// TODO: 信鸽人工服务
-// 后端API V3，iOS 发push的时候message_type填message的时候报错
-
-// 基础鉴权为未通过，请检查key[appKey|groupKey]是否与push_type匹配！
-
-// 另外由于iOS和Android是两个不同的appid和key，如果platform填all，即全平台推送的时候怎么填Authorization header？
 
 // CommonRspEnv 信鸽推送接口通用基础返回值的environment字段
 type CommonRspEnv string
@@ -87,7 +78,7 @@ type MsgType string
 const (
 	// MsgTypeOfNotify 消息类型为通知栏消息
 	MsgTypeOfNotify MsgType = "notify"
-	// MsgTypeOfMsg 消息类型为透传消息(Android)/静默消息(iOS)
+	// MsgTypeOfMsg 消息类型为透传消息(android)/静默消息(iOS)
 	MsgTypeOfMsg MsgType = "message"
 )
 
@@ -173,7 +164,7 @@ type IPushMsg interface {
 	RenderOptions(opts ...PushMsgOption) error
 	clone(options ...PushMsgOption) IPushMsg
 	nextRequest() IPushMsg
-	toHttpRequest(author Authorization) (request *http.Request, err error)
+	toHttpRequest(author IAuth) (request *http.Request, err error)
 	equalsPlatform(platform Platform) bool
 }
 
@@ -229,7 +220,7 @@ func (rst *PushMsg) equalsPlatform(platform Platform) bool {
 	return rst.Platform == platform
 }
 
-func (rst PushMsg) toHttpRequest(author Authorization) (request *http.Request, err error) {
+func (rst PushMsg) toHttpRequest(author IAuth) (request *http.Request, err error) {
 
 	bodyBytes, err := json.Marshal(rst)
 	if err != nil {
@@ -239,7 +230,7 @@ func (rst PushMsg) toHttpRequest(author Authorization) (request *http.Request, e
 	if err != nil {
 		return nil, err
 	}
-	author.Auth(request)
+	author.authRequest(request)
 	return
 }
 func sliceAccountList(rst *PushMsg) error {
@@ -333,25 +324,3 @@ type Aps struct {
 type Alert map[string]string
 
 // TODO: error type constant
-
-// Authorization 用来添加请求Authorization
-type Authorization struct {
-	AppID     string
-	SecretKey string
-}
-
-// Auth 添加一些默认的请求头
-func (a *Authorization) Auth(req *http.Request) {
-	req.Header.Add("Authorization", makeAuthHeader(a.AppID, a.SecretKey))
-	req.Header.Add("Content-Type", "application/json")
-}
-
-// makeAuthHeader 根据appid和secretKey拼接并base64encode
-func makeAuthHeader(appID, secretKey string) string {
-	base64Str := base64.StdEncoding.EncodeToString(
-		[]byte(
-			fmt.Sprintf("%s:%s", appID, secretKey),
-		),
-	)
-	return fmt.Sprintf("Basic %s", base64Str)
-}
