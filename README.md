@@ -7,10 +7,16 @@
 ##### 部分代码来源于信鸽官方推荐的[FrontMage](https://github.com/FrontMage/xinge)
 ##### 原本想使用FrontMage的库，但不太符合我懒人的习惯，于是自己动手改造一下，分享给大家！
 
+
+考虑到国内连接GitHub缓慢，代码也同步放在[我的码云](https://gitee.com/kmlixh/xinge)
+
 ## 用法
 
 ### 安装
 `$ go get gitee.com/kmlixh/xinge`
+
+或者
+`$ go get github.com/kmlixh/xinge`
 
 ### 全局推送
 ```go
