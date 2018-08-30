@@ -3,6 +3,7 @@ package xinge
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -45,6 +46,11 @@ func MakeAuthHeader(appID, secretKey string) string {
 	return fmt.Sprintf("Basic %s", base64Str)
 }
 
+//MakeAuthoraztion 构造一个鉴权
+func MakeAuthoraztion(appId string, secretKey string) IAuth {
+	return &Authorization{appId, secretKey}
+}
+
 //XgClient 用来推送消息，或者设置Tag的信鸽客户端
 type XgClient struct {
 	android IAuth
@@ -61,40 +67,61 @@ func (xg *XgClient) SetAndroidAuth(auth IAuth) {
 func (xg *XgClient) SetIOSAuth(auth IAuth) {
 	xg.iOS = auth
 }
+func (xg *XgClient) SetAuth(appId string, secretKey string, platform Platform) {
+	if platform == PlatformAndroid {
+		xg.android = Authorization{appId, secretKey}
+	} else {
+		xg.iOS = Authorization{appId, secretKey}
+
+	}
+}
 
 //Push 推送消息
-func (client XgClient) Push(msg IPushMsg) CommonRsp {
+func (xg XgClient) Push(msg IPushMsg) CommonRsp {
 	if msg.equalsPlatform(PlatformAndroid) {
-		return client.PushWithAuthorization(msg, client.android)
+		return xg.PushWithAuthorization(msg, xg.android)
 	}
-	return client.PushWithAuthorization(msg, client.iOS)
+	return xg.PushWithAuthorization(msg, xg.iOS)
 }
 
 //PushWithAuthorization 使用自定义的Authorization信息进行推送
-func (client XgClient) PushWithAuthorization(msg IPushMsg, author IAuth) CommonRsp {
+func (xg XgClient) PushWithAuthorization(msg IPushMsg, auth IAuth) CommonRsp {
+	if auth == nil {
+		panic(errors.New("authorization could not be nil"))
+	}
 	var commonRsp CommonRsp
 	temp := msg.nextRequest()
 	pushId := "0"
 	for ; temp != nil; temp = msg.nextRequest() {
 		temp.RenderOptions(OptionPushID(pushId))
 		var httpRequest *http.Request
-		httpRequest, _ = temp.toHttpRequest(author)
+		httpRequest, _ = temp.toHttpRequest(auth)
 		if httpRequest != nil {
-			resp, _ := client.client.Do(httpRequest)
-			commonRsp = client.MarshalResp(resp)
+			resp, _ := xg.client.Do(httpRequest)
+			commonRsp = xg.MarshalResp(resp)
 			if len(commonRsp.PushID) > 0 {
 				pushId = commonRsp.PushID
 			}
 		}
 	}
-
 	return commonRsp
 }
-func NewXingeClient2() XgClient {
+
+//NewXingeClient3 无参数构建一个XgClient对象
+func NewXingeClient3() XgClient {
 	return NewXingeClient(nil, nil, NewHttpClient())
 }
+
+//NewXingeClient 构建一个完整的XgClient对象
 func NewXingeClient(androidAuth IAuth, iOSAuth IAuth, client *http.Client) XgClient {
 	return XgClient{androidAuth, iOSAuth, client}
+}
+
+//NewXingeClientent2 构建一个单平台的XgClient对象
+func NewXingeClientent2(appId string, secretKey string, platform Platform) XgClient {
+	xg := NewXingeClient3()
+	xg.SetAuth(appId, secretKey, platform)
+	return xg
 }
 
 //MarshalResp 解析返回
