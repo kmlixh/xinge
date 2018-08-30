@@ -393,10 +393,14 @@ func DefaultAndroidParams() *AndroidParams {
 func DefaultIOSParams(title string, content string) *IOSParams {
 	return &IOSParams{Aps: &Aps{Alert: DefaultApsAlert(title, content)}}
 }
+
+//DefaultApsAlert 创建默认的Alert
 func DefaultApsAlert(title string, body string) Alert {
 	alert := Alert{"title": title, "body": body}
 	return alert
 }
+
+//DefaultAps 创建默认的Aps
 func DefaultAps(title string, content string) *Aps {
 	return &Aps{Alert: DefaultApsAlert(title, content)}
 }

@@ -4,7 +4,6 @@
     <list default="true" id="ebf97aa2-68c4-416d-a505-1e4a6101b8c1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/definations.go" beforeDir="false" afterPath="$PROJECT_DIR$/definations.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/options.go" beforeDir="false" afterPath="$PROJECT_DIR$/options.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,16 +16,16 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file pinned="false" current-in-tab="false">
+            <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/definations.go">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="1403">
-                    <caret line="381" column="24" selection-start-line="381" selection-start-column="24" selection-end-line="381" selection-end-column="24" />
+                  <state relative-caret-position="1593">
+                    <caret line="402" column="21" selection-start-line="402" selection-start-column="21" selection-end-line="402" selection-end-column="21" />
                   </state>
                 </provider>
               </entry>
             </file>
-            <file pinned="false" current-in-tab="true">
+            <file pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/options.go">
                 <provider selected="true" editor-type-id="text-editor">
                   <state relative-caret-position="1531">
@@ -71,7 +70,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CGO" value="8" />
-          <entry key="Go" value="6749" />
+          <entry key="Go" value="6772" />
           <entry key="Markdown" value="2379" />
           <entry key="PLAIN_TEXT" value="40" />
         </counts>
@@ -79,7 +78,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="7" />
-          <entry key="go" value="6732" />
+          <entry key="go" value="6755" />
           <entry key="md" value="2404" />
           <entry key="txt" value="33" />
         </counts>
@@ -183,8 +182,8 @@
         <option value="$PROJECT_DIR$/push_utils.go" />
         <option value="$PROJECT_DIR$/client.go" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/definations.go" />
         <option value="$PROJECT_DIR$/options.go" />
+        <option value="$PROJECT_DIR$/definations.go" />
       </list>
     </option>
   </component>
@@ -294,7 +293,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.08422175" />
@@ -388,17 +387,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/definations.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1403">
-          <caret line="381" column="24" selection-start-line="381" selection-start-column="24" selection-end-line="381" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/options.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1531">
           <caret line="475" column="25" selection-start-line="475" selection-start-column="25" selection-end-line="475" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/definations.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1593">
+          <caret line="402" column="21" selection-start-line="402" selection-start-column="21" selection-end-line="402" selection-end-column="21" />
         </state>
       </provider>
     </entry>
