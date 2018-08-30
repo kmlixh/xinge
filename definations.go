@@ -354,21 +354,32 @@ func (alert Alert) SetBody(content string) {
 	alert.Set("body", content)
 }
 
+//SetTitleLocKey 设置相关属性
 func (alert Alert) SetTitleLocKey(data string) {
 	alert.Set("title-loc-key", data)
 }
+
+//SetTitleLocArgs  设置相关属性
 func (alert Alert) SetTitleLocArgs(data []string) {
 	alert.Set("title-loc-args", data)
 }
+
+//SetActionLocKey  设置相关属性
 func (alert Alert) SetActionLocKey(data string) {
 	alert.Set("action-loc-key", data)
 }
+
+//SetLocKey  设置相关属性
 func (alert Alert) SetLocKey(data string) {
 	alert.Set("loc-key", data)
 }
+
+//SetLocArgs  设置相关属性
 func (alert Alert) SetLocArgs(data []string) {
 	alert.Set("loc-args", data)
 }
+
+//SetLaunchImage  设置相关属性
 func (alert Alert) SetLaunchImage(data string) {
 	alert.Set("launch-image", data)
 }

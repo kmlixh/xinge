@@ -54,13 +54,13 @@ func OptionTitle(t string) PushMsgOption {
 				r.Message.IOS.Aps.Alert["title"] = t
 			} else {
 				r.Message.IOS.Aps = &Aps{
-					Alert: map[string]string{"title": t},
+					Alert: map[string]interface{}{"title": t},
 				}
 			}
 		} else {
 			r.Message.IOS = &IOSParams{
 				Aps: &Aps{
-					Alert: map[string]string{"title": t},
+					Alert: map[string]interface{}{"title": t},
 				},
 			}
 		}
@@ -77,25 +77,29 @@ func OptionContent(c string) PushMsgOption {
 				r.Message.IOS.Aps.Alert["body"] = c
 			} else {
 				r.Message.IOS.Aps = &Aps{
-					Alert: map[string]string{"body": c},
+					Alert: map[string]interface{}{"body": c},
 				}
 			}
 		} else {
 			r.Message.IOS = &IOSParams{
 				Aps: &Aps{
-					Alert: map[string]string{"body": c},
+					Alert: map[string]interface{}{"body": c},
 				},
 			}
 		}
 		return nil
 	}
 }
+
+//OptionAndroidParams 设置AndroidParams
 func OptionAndroidParams(params *AndroidParams) PushMsgOption {
 	return func(r *PushMsg) error {
 		r.Message.Android = params
 		return nil
 	}
 }
+
+//OptionIOSParams 设置IOSParams
 func OptionIOSParams(params *IOSParams) PushMsgOption {
 	return func(r *PushMsg) error {
 		r.Message.IOS = params
@@ -423,6 +427,8 @@ func OptionAps(aps *Aps) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsAlert 设置Alert
 func OptionApsAlert(alert Alert) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
@@ -430,6 +436,8 @@ func OptionApsAlert(alert Alert) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsBadage 设置Badage
 func OptionApsBadage(badge int) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
@@ -437,6 +445,8 @@ func OptionApsBadage(badge int) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsSound 设置属性
 func OptionApsSound(sound string) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
@@ -444,6 +454,8 @@ func OptionApsSound(sound string) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsContentAvailable  设置属性
 func OptionApsContentAvailable(contentAvailable int) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
@@ -451,6 +463,8 @@ func OptionApsContentAvailable(contentAvailable int) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsCategory  设置属性
 func OptionApsCategory(category string) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
@@ -458,6 +472,8 @@ func OptionApsCategory(category string) PushMsgOption {
 		return nil
 	}
 }
+
+//OptionApsThreadId  设置属性
 func OptionApsThreadId(threadId string) PushMsgOption {
 	return func(r *PushMsg) error {
 		checkIOSParams(r)
