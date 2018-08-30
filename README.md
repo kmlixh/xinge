@@ -16,6 +16,7 @@
 `$ go get gitee.com/kmlixh/xinge`
 
 或者
+
 `$ go get github.com/kmlixh/xinge`
 
 ### 全局推送
