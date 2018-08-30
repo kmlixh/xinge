@@ -1,6 +1,8 @@
 package xinge
 
-import "time"
+import (
+	"time"
+)
 
 //OptionPlatIos 的注释
 func OptionPlatIos() PushMsgOption {
@@ -88,18 +90,42 @@ func OptionContent(c string) PushMsgOption {
 		return nil
 	}
 }
+func OptionAndroidParams(params *AndroidParams) PushMsgOption {
+	return func(r *PushMsg) error {
+		r.Message.Android = params
+		return nil
+	}
+}
+func OptionIOSParams(params *IOSParams) PushMsgOption {
+	return func(r *PushMsg) error {
+		r.Message.IOS = params
+		return nil
+	}
+}
 
 //OptionNID 的注释
 func OptionNID(id int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.NID = id
 		return nil
+	}
+}
+func checkAndroidParams(r *PushMsg) {
+	if r.Message.Android == nil {
+		r.Message.Android = DefaultAndroidParams()
+	}
+}
+func checkIOSParams(r *PushMsg) {
+	if r.Message.IOS == nil {
+		r.Message.IOS = DefaultIOSParams(r.Title, r.Content)
 	}
 }
 
 //OptionBuilderID 的注释
 func OptionBuilderID(id int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.BuilderID = id
 		return nil
 	}
@@ -108,6 +134,7 @@ func OptionBuilderID(id int) PushMsgOption {
 //OptionRing 的注释
 func OptionRing(ring int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.Ring = ring
 		return nil
 	}
@@ -116,6 +143,7 @@ func OptionRing(ring int) PushMsgOption {
 //OptionRingRaw 的注释
 func OptionRingRaw(rr string) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.RingRaw = rr
 		return nil
 	}
@@ -124,6 +152,7 @@ func OptionRingRaw(rr string) PushMsgOption {
 //OptionVibrate 的注释
 func OptionVibrate(v int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.Vibrate = v
 		return nil
 	}
@@ -132,6 +161,7 @@ func OptionVibrate(v int) PushMsgOption {
 //OptionLights 的注释
 func OptionLights(l int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.Lights = l
 		return nil
 	}
@@ -140,6 +170,7 @@ func OptionLights(l int) PushMsgOption {
 //OptionCleanable 的注释
 func OptionCleanable(c int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.Cleanable = c
 		return nil
 	}
@@ -148,6 +179,7 @@ func OptionCleanable(c int) PushMsgOption {
 //OptionIconType 的注释
 func OptionIconType(it int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.IconType = it
 		return nil
 	}
@@ -156,6 +188,7 @@ func OptionIconType(it int) PushMsgOption {
 //OptionIconRes 的注释
 func OptionIconRes(ir string) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.IconRes = ir
 		return nil
 	}
@@ -164,6 +197,7 @@ func OptionIconRes(ir string) PushMsgOption {
 //OptionStyleID 的注释
 func OptionStyleID(s int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.StyleID = s
 		return nil
 	}
@@ -172,6 +206,7 @@ func OptionStyleID(s int) PushMsgOption {
 //OptionSmallIcon 的注释
 func OptionSmallIcon(si int) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		r.Message.Android.SmallIcon = si
 		return nil
 	}
@@ -180,6 +215,7 @@ func OptionSmallIcon(si int) PushMsgOption {
 //OptionAddAction 的注释
 func OptionAddAction(k string, v interface{}) PushMsgOption {
 	return func(r *PushMsg) error {
+		checkAndroidParams(r)
 		if r.Message.Android.Action == nil {
 			r.Message.Android.Action = map[string]interface{}{k: v}
 		} else {
@@ -193,9 +229,11 @@ func OptionAddAction(k string, v interface{}) PushMsgOption {
 func OptionCustomContent(ct map[string]string) PushMsgOption {
 	return func(r *PushMsg) error {
 		if r.Platform == PlatformAndroid {
+			checkAndroidParams(r)
 			r.Message.Android.CustomContent = ct
 			r.Message.IOS = nil
 		} else {
+			checkIOSParams(r)
 			r.Message.Android = nil
 			r.Message.IOS.Custom = ct
 
@@ -207,32 +245,21 @@ func OptionCustomContent(ct map[string]string) PushMsgOption {
 //OptionCustomContentSet 的注释
 func OptionCustomContentSet(k, v string) PushMsgOption {
 	return func(r *PushMsg) error {
-		if r.Message.Android.CustomContent == nil {
-			r.Message.Android.CustomContent = map[string]string{k: v}
+		if r.Platform == PlatformAndroid {
+			checkAndroidParams(r)
+			if r.Message.Android.CustomContent == nil {
+				r.Message.Android.CustomContent = map[string]string{k: v}
+			} else {
+				r.Message.Android.CustomContent[k] = v
+			}
 		} else {
-			r.Message.Android.CustomContent[k] = v
+			checkIOSParams(r)
+			if r.Message.IOS.Custom == nil {
+				r.Message.IOS.Custom = map[string]string{k: v}
+			} else {
+				r.Message.IOS.Custom[k] = v
+			}
 		}
-		if r.Message.IOS.Custom == nil {
-			r.Message.IOS.Custom = map[string]string{k: v}
-		} else {
-			r.Message.IOS.Custom[k] = v
-		}
-		return nil
-	}
-}
-
-//OptionAps 的注释
-func OptionAps(aps *Aps) PushMsgOption {
-	return func(r *PushMsg) error {
-		r.Message.IOS.Aps = aps
-		return nil
-	}
-}
-
-//OptionAudienceType 的注释
-func OptionAudienceType(at AudienceType) PushMsgOption {
-	return func(r *PushMsg) error {
-		r.AudienceType = at
 		return nil
 	}
 }
@@ -262,8 +289,13 @@ func OptionTagListOpt2(tl TagList) PushMsgOption {
 }
 
 //OptionTokenList 的注释
-func OptionTokenList(tl []string) PushMsgOption {
+func OptionTokenList(tl ...string) PushMsgOption {
 	return func(r *PushMsg) error {
+		if len(tl) == 1 {
+			r.AudienceType = AudienceTypeToken
+		} else {
+			r.AudienceType = AudienceTypeTokenList
+		}
 		r.TokenList = tl
 		return nil
 	}
@@ -282,8 +314,13 @@ func OptionTokenListAdd(t string) PushMsgOption {
 }
 
 //OptionAccountList 的注释
-func OptionAccountList(al []string) PushMsgOption {
+func OptionAccountList(al ...string) PushMsgOption {
 	return func(r *PushMsg) error {
+		if len(al) == 1 {
+			r.AudienceType = AudienceTypeAccount
+		} else {
+			r.AudienceType = AudienceTypeAccountList
+		}
 		r.AccountList = al
 		return nil
 	}
@@ -296,6 +333,11 @@ func OptionAccountListAdd(a string) PushMsgOption {
 			r.AccountList = append(r.AccountList, a)
 		} else {
 			r.AccountList = []string{a}
+		}
+		if len(r.AccountList) == 1 {
+			r.AudienceType = AudienceTypeAccount
+		} else {
+			r.AudienceType = AudienceTypeAccountList
 		}
 		return nil
 	}
@@ -366,9 +408,60 @@ func OptionPushID(pid string) PushMsgOption {
 }
 
 //OptionMessageType 的注释
-func OptionMessageType(t MsgType) PushMsgOption {
+func OptionMessageType(t MessageType) PushMsgOption {
 	return func(r *PushMsg) error {
-		r.MsgType = t
+		r.MessageType = t
+		return nil
+	}
+}
+
+//OptionAps 的注释
+func OptionAps(aps *Aps) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps = aps
+		return nil
+	}
+}
+func OptionApsAlert(alert Alert) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.Alert = alert
+		return nil
+	}
+}
+func OptionApsBadage(badge int) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.Badge = badge
+		return nil
+	}
+}
+func OptionApsSound(sound string) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.Sound = sound
+		return nil
+	}
+}
+func OptionApsContentAvailable(contentAvailable int) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.ContentAvailable = contentAvailable
+		return nil
+	}
+}
+func OptionApsCategory(category string) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.Category = category
+		return nil
+	}
+}
+func OptionApsThreadId(threadId string) PushMsgOption {
+	return func(r *PushMsg) error {
+		checkIOSParams(r)
+		r.Message.IOS.Aps.ThreadId = threadId
 		return nil
 	}
 }

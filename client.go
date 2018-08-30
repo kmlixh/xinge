@@ -67,6 +67,8 @@ func (xg *XgClient) SetAndroidAuth(auth IAuth) {
 func (xg *XgClient) SetIOSAuth(auth IAuth) {
 	xg.iOS = auth
 }
+
+//SetAuth 设置某个平台的鉴权信息
 func (xg *XgClient) SetAuth(appId string, secretKey string, platform Platform) {
 	if platform == PlatformAndroid {
 		xg.android = Authorization{appId, secretKey}
@@ -125,7 +127,7 @@ func NewXingeClientent2(appId string, secretKey string, platform Platform) XgCli
 }
 
 //MarshalResp 解析返回
-func (client XgClient) MarshalResp(resp *http.Response) CommonRsp {
+func (xg XgClient) MarshalResp(resp *http.Response) CommonRsp {
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	r := CommonRsp{}

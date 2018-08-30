@@ -48,18 +48,18 @@ type CommonRsp struct {
 type AudienceType string
 
 const (
-	// AudiTypeAll 全量推送
-	AudiTypeAll AudienceType = "all"
-	// AudiTypeTag 标签推送
-	AudiTypeTag AudienceType = "tag"
-	// AudiTypeToken  单设备推送
-	AudiTypeToken AudienceType = "token"
-	// AudiTypeTokenList  设备列表推送
-	AudiTypeTokenList AudienceType = "token_list"
-	// AudiTypeAccount 单账号推送
-	AudiTypeAccount AudienceType = "account"
-	// AudiTypeAccountList 账号列表推送
-	AudiTypeAccountList AudienceType = "account_list"
+	// AudienceTypeAll 全量推送
+	AudienceTypeAll AudienceType = "all"
+	// AudienceTypeTag 标签推送
+	AudienceTypeTag AudienceType = "tag"
+	// AudienceTypeToken  单设备推送
+	AudienceTypeToken AudienceType = "token"
+	// AudienceTypeTokenList  设备列表推送
+	AudienceTypeTokenList AudienceType = "token_list"
+	// AudienceTypeAccount 单账号推送
+	AudienceTypeAccount AudienceType = "account"
+	// AudienceTypeAccountList 账号列表推送
+	AudienceTypeAccountList AudienceType = "account_list"
 )
 
 // Platform push API platform参数
@@ -72,14 +72,14 @@ const (
 	PlatformiOS Platform = "ios"
 )
 
-// MsgType push API message_type参数
-type MsgType string
+// MessageType push API message_type参数
+type MessageType string
 
 const (
-	// MsgTypeOfNotify 消息类型为通知栏消息
-	MsgTypeOfNotify MsgType = "notify"
-	// MsgTypeOfMsg 消息类型为透传消息(android)/静默消息(iOS)
-	MsgTypeOfMsg MsgType = "message"
+	// MessageTypeOfNotify 消息类型为通知栏消息
+	MessageTypeOfNotify MessageType = "notify"
+	// MessageTypeOfMsg 消息类型为透传消息(android)/静默消息(iOS)
+	MessageTypeOfMsg MessageType = "message"
 )
 
 // PushMsg 推送的消息体
@@ -90,8 +90,8 @@ type PushMsg struct {
 	Platform `json:"platform"`
 	//Message 消息内容
 	Message `json:"message"`
-	//MsgType 消息类型，见MessageType类型
-	MsgType `json:"message_type"`
+	//MessageType 消息类型，见MessageType类型
+	MessageType `json:"message_type"`
 
 	//TagList 当AudienceType == AdTag时必填
 	TagList *TagList `json:"tag_list,omitempty"`
@@ -101,7 +101,7 @@ type PushMsg struct {
 	 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
 	则会使用跟123相同的文案推送*/
 	TokenList []string `json:"token_list,omitempty"`
-	//AccountList 当AudienceType == AudiTypeAccount 或 AdAccountList 时必填的参数，
+	//AccountList 当AudienceType == AudienceTypeAccount 或 AdAccountList 时必填的参数，
 	// 当AdAccount时即使传了多个token，也只有第一个会被推送
 	// 当AdAccountList时，最多支持1000个token，同时push_id第一次请求时必须填0
 	// 系统会返回一个push_id = 123(例)，后续推送如果push_id填写123(例)
@@ -181,7 +181,7 @@ func (rst *PushMsg) clone(options ...PushMsgOption) IPushMsg {
 		AudienceType: rst.AudienceType,
 		Platform:     rst.Platform,
 		Message:      rst.Message,
-		MsgType:      rst.MsgType,
+		MessageType:  rst.MessageType,
 		TagList:      rst.TagList,
 		TokenList:    rst.TokenList,
 		AccountList:  rst.AccountList,
@@ -202,9 +202,9 @@ func (rst *PushMsg) clone(options ...PushMsgOption) IPushMsg {
 }
 func (rst *PushMsg) nextRequest() IPushMsg {
 	var request IPushMsg
-	if rst.AudienceType == AudiTypeAccountList {
+	if rst.AudienceType == AudienceTypeAccountList {
 		request = rst.clone(sliceAccountList)
-	} else if rst.AudienceType == AudiTypeTokenList {
+	} else if rst.AudienceType == AudienceTypeTokenList {
 		request = rst.clone(sliceTokenList)
 	} else if rst.nextIndex == 0 {
 		rst.nextIndex = -1
@@ -311,16 +311,81 @@ type IOSParams struct {
 	Custom map[string]string `json:"custom,omitempty"`
 }
 
-// Aps 通知栏iOS消息的aps字段，详情请参照苹果文档
+// Aps 通知栏iOS消息的aps字段，详情请参照苹果文档 https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/PayloadKeyReference.html#//apple_ref/doc/uid/TP40008194-CH17-SW1
 type Aps struct {
 	Alert            `json:"alert,omitempty"`
 	Badge            int    `json:"badge,omitempty"`
 	Category         string `json:"category,omitempty"`
 	ContentAvailable int    `json:"content-available,omitempty"`
 	Sound            string `json:"sound,omitempty"`
+	ThreadId         string `json:"thread_id,omitempty"`
 }
 
 //Alert 自定义Alert的数据类型
-type Alert map[string]string
+type Alert map[string]interface{}
 
-// TODO: error type constant
+/*
+Alert包含以下几个子属性：
+title			String
+body			String
+title-loc-key	String or null
+title-loc-args	Array of strings or null
+action-loc-key	String or null
+loc-key			String
+loc-args		Array of strings
+launch-image	String
+
+其中，title,body应该是必须的。详细请参考：
+https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/PayloadKeyReference.html#//apple_ref/doc/uid/TP40008194-CH17-SW1
+*/
+
+//Set 设置Key-Value
+func (alert Alert) Set(key string, value interface{}) {
+	alert[key] = value
+}
+
+//SetTitle 设置标题
+func (alert Alert) SetTitle(title string) {
+	alert.Set("title", title)
+}
+
+//SetBody 设置提示详情
+func (alert Alert) SetBody(content string) {
+	alert.Set("body", content)
+}
+
+func (alert Alert) SetTitleLocKey(data string) {
+	alert.Set("title-loc-key", data)
+}
+func (alert Alert) SetTitleLocArgs(data []string) {
+	alert.Set("title-loc-args", data)
+}
+func (alert Alert) SetActionLocKey(data string) {
+	alert.Set("action-loc-key", data)
+}
+func (alert Alert) SetLocKey(data string) {
+	alert.Set("loc-key", data)
+}
+func (alert Alert) SetLocArgs(data []string) {
+	alert.Set("loc-args", data)
+}
+func (alert Alert) SetLaunchImage(data string) {
+	alert.Set("launch-image", data)
+}
+
+//DefaultAndroidParams 默认的Android推送参数
+func DefaultAndroidParams() *AndroidParams {
+	return &AndroidParams{NID: 0, BuilderID: 0, Ring: 1, Vibrate: 1, Lights: 0}
+}
+
+//DefaultIOSParams 默认的iOS推送参数
+func DefaultIOSParams(title string, content string) *IOSParams {
+	return &IOSParams{Aps: &Aps{Alert: DefaultApsAlert(title, content)}}
+}
+func DefaultApsAlert(title string, body string) Alert {
+	alert := Alert{"title": title, "body": body}
+	return alert
+}
+func DefaultAps(title string, content string) *Aps {
+	return &Aps{Alert: DefaultApsAlert(title, content)}
+}

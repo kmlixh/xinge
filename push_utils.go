@@ -1,72 +1,65 @@
 package xinge
 
-//NewTokenPushMsg 新建token类型的
-func NewTokenPushMsg(platform Platform, msgType MsgType, title string, content string, tokens ...string) IPushMsg {
-	var tps AudienceType
-	lens := len(tokens)
-	if lens == 0 {
-		return nil
-	} else if lens == 1 {
-		tps = AudiTypeToken
-	} else if lens > 1 {
-		tps = AudiTypeTokenList
-	}
-	return &PushMsg{
-		Platform:     platform,
-		AudienceType: tps,
-		TokenList:    tokens,
-		PushID:       "0",
-		MsgType:      msgType,
+//DefaultPushMsg 创建基础的推送消息
+func DefaultPushMsg(platform Platform, msgType MessageType, title string, content string) IPushMsg {
+	msg := &PushMsg{
+		Platform:    platform,
+		PushID:      "0",
+		MessageType: msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
 		}}
+	var optParams PushMsgOption
+	if platform == PlatformAndroid {
+		optParams = OptionAndroidParams(DefaultAndroidParams())
+	} else {
+		optParams = OptionIOSParams(DefaultIOSParams(title, content))
+	}
+	msg.RenderOptions(optParams)
+	return msg
+}
+
+//NewTokenPushMsg 新建token类型的
+func NewTokenPushMsg(platform Platform, msgType MessageType, title string, content string, tokens ...string) IPushMsg {
+	msg := DefaultPushMsg(platform, msgType, title, content)
+	if len(tokens) > 0 {
+		msg.RenderOptions(OptionTokenList(tokens...))
+	}
+	return msg
 }
 
 //NewAccountPushMsg 基于account的推送
-func NewAccountPushMsg(platform Platform, msgType MsgType, title string, content string, accounts ...string) IPushMsg {
-	var tps AudienceType
-	lens := len(accounts)
-	if lens == 0 {
-		return nil
-	} else if lens == 1 {
-		tps = AudiTypeAccount
-	} else if lens > 1 {
-		tps = AudiTypeAccountList
+func NewAccountPushMsg(platform Platform, msgType MessageType, title string, content string, accounts ...string) IPushMsg {
+
+	msg := DefaultPushMsg(platform, msgType, title, content)
+	if len(accounts) == 0 {
+		msg.RenderOptions(OptionAccountList(accounts...))
 	}
-	return &PushMsg{
-		Platform:     platform,
-		AudienceType: tps,
-		AccountList:  accounts,
-		PushID:       "0",
-		MsgType:      msgType,
-		Message: Message{
-			Title:   title,
-			Content: content,
-		}}
+	return msg
 }
 
 //NewTokenNotifyPushMsg 基于token的notify类型的推送
 func NewTokenNotifyPushMsg(platform Platform, title string, content string, tokens ...string) IPushMsg {
-	return NewTokenPushMsg(platform, MsgTypeOfNotify, title, content, tokens...)
+	return NewTokenPushMsg(platform, MessageTypeOfNotify, title, content, tokens...)
 }
 
 //NewAccountNotifyPushMsg 基于account的notify类型的推送
 func NewAccountNotifyPushMsg(platform Platform, title string, content string, accounts ...string) IPushMsg {
-	return NewAccountPushMsg(platform, MsgTypeOfNotify, title, content, accounts...)
+	return NewAccountPushMsg(platform, MessageTypeOfNotify, title, content, accounts...)
 }
 
 //NewTagPushMsg tag类型的推送
-func NewTagPushMsg(platform Platform, msgType MsgType, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
+func NewTagPushMsg(platform Platform, msgType MessageType, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
 	if len(tags) == 0 {
 		return nil
 	}
 	return &PushMsg{
 		Platform:     platform,
-		AudienceType: AudiTypeTag,
+		AudienceType: AudienceTypeTag,
 		TagList:      &TagList{tags, tagOpt},
 		PushID:       "0",
-		MsgType:      msgType,
+		MessageType:  msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
@@ -75,16 +68,16 @@ func NewTagPushMsg(platform Platform, msgType MsgType, title string, content str
 
 //NewTagNotifyPushMsg 基于tag的notify类型的推送
 func NewTagNotifyPushMsg(platform Platform, title string, content string, tagOpt TagOperation, tags ...string) IPushMsg {
-	return NewTagPushMsg(platform, MsgTypeOfNotify, title, content, tagOpt, tags...)
+	return NewTagPushMsg(platform, MessageTypeOfNotify, title, content, tagOpt, tags...)
 }
 
 //NewPushAllPushMsg 全员推送
-func NewPushAllPushMsg(platform Platform, msgType MsgType, title string, content string) IPushMsg {
+func NewPushAllPushMsg(platform Platform, msgType MessageType, title string, content string) IPushMsg {
 	return &PushMsg{
 		Platform:     platform,
-		AudienceType: AudiTypeAll,
+		AudienceType: AudienceTypeAll,
 		PushID:       "0",
-		MsgType:      msgType,
+		MessageType:  msgType,
 		Message: Message{
 			Title:   title,
 			Content: content,
@@ -93,5 +86,5 @@ func NewPushAllPushMsg(platform Platform, msgType MsgType, title string, content
 
 //NewPushAllNotifyPushMsg 基于notify类型的全员推送
 func NewPushAllNotifyPushMsg(platform Platform, title string, content string) IPushMsg {
-	return NewPushAllPushMsg(platform, MsgTypeOfNotify, title, content)
+	return NewPushAllPushMsg(platform, MessageTypeOfNotify, title, content)
 }
