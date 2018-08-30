@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ebf97aa2-68c4-416d-a505-1e4a6101b8c1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/alipay.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wechat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/alipay.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/alipay.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wechat.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/wechat.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +46,7 @@
         <counts>
           <entry key="CGO" value="8" />
           <entry key="Go" value="6676" />
-          <entry key="Markdown" value="2286" />
+          <entry key="Markdown" value="2375" />
           <entry key="PLAIN_TEXT" value="40" />
         </counts>
       </usages-collector>
@@ -53,7 +54,7 @@
         <counts>
           <entry key="dummy" value="7" />
           <entry key="go" value="6659" />
-          <entry key="md" value="2311" />
+          <entry key="md" value="2400" />
           <entry key="txt" value="33" />
         </counts>
       </usages-collector>
@@ -93,9 +94,9 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="751">
-                <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="680">
+                <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
               </first_editor>
               <second_editor />
             </state>
@@ -209,6 +210,11 @@
               <item name="xinge" type="b2602c69:ProjectViewProjectNode" />
               <item name="xinge" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="xinge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="xinge" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -229,6 +235,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\GoPath\src\gitee.com\kmlixh\xinge\img" />
       <recent name="C:\GoPath\src\gitee.com\kmlixh\xinge" />
       <recent name="C:\GoPath\src\gitee.com\kmlixh\xinge\define" />
     </key>
@@ -377,9 +384,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="751">
-            <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="680">
+            <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
           </first_editor>
           <second_editor />
         </state>

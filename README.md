@@ -195,10 +195,13 @@ func DefaultPushMsg(platform Platform, msgType MessageType, title string, conten
 
 ```
 相应的，如果想看特别详细的代码文档，点击文档顶部的godoc图标，或者是下面的图标
+
 [![Go Report Card](https://goreportcard.com/badge/gitee.com/kmlixh/xinge)](https://goreportcard.com/report/gitee.com/kmlixh/xinge)
 [![GoDoc](https://godoc.org/gitee.com/kmlixh/xinge?status.svg)](https://godoc.org/gitee.com/kmlixh/xinge)
 
 ### 捐助作者
 
-![微信](./wechat.png)
-![支付宝](./alipay.jpg)
+<img src="https://gitee.com/kmlixh/xinge/raw/master/wechat.png" width="200"  align=center />
+&nbsp;&nbsp;&nbsp;
+<img src="https://gitee.com/kmlixh/xinge/raw/master/alipay.png" width="200" align=center />
+
