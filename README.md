@@ -201,7 +201,7 @@ func DefaultPushMsg(platform Platform, msgType MessageType, title string, conten
 
 ### 捐助作者
 
-<img src="https://gitee.com/kmlixh/xinge/raw/master/wechat.png" width="200"  align=center />
+<img src="https://gitee.com/kmlixh/xinge/raw/master/img/wechat.png" width="200"  align=center />
 &nbsp;&nbsp;&nbsp;
-<img src="https://gitee.com/kmlixh/xinge/raw/master/alipay.png" width="200" align=center />
+<img src="https://gitee.com/kmlixh/xinge/raw/master/img/alipay.png" width="200" align=center />
 
