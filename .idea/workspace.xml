@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ebf97aa2-68c4-416d-a505-1e4a6101b8c1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/alipay.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wechat.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -10,43 +12,6 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/example_test.go">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="285">
-                    <caret line="15" column="30" lean-forward="true" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-                    <folding>
-                      <element signature="e#15#44#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/README.md">
-                <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-                  <state split_layout="SPLIT">
-                    <first_editor relative-caret-position="133">
-                      <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-                      <folding>
-                        <element signature="e#14#76#0" expanded="true" />
-                      </folding>
-                    </first_editor>
-                    <second_editor />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-1744138663">
@@ -65,21 +30,22 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="LICENSE" value="3" />
-          <entry key="go" value="75" />
-          <entry key="md" value="10" />
+          <entry key="go" value="76" />
+          <entry key="md" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Go" value="75" />
-          <entry key="Markdown" value="9" />
+          <entry key="Go" value="76" />
+          <entry key="Markdown" value="10" />
           <entry key="PLAIN_TEXT" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="6661" />
-          <entry key="Markdown" value="484" />
+          <entry key="CGO" value="8" />
+          <entry key="Go" value="6676" />
+          <entry key="Markdown" value="2286" />
           <entry key="PLAIN_TEXT" value="40" />
         </counts>
       </usages-collector>
@@ -87,7 +53,7 @@
         <counts>
           <entry key="dummy" value="7" />
           <entry key="go" value="6659" />
-          <entry key="md" value="486" />
+          <entry key="md" value="2311" />
           <entry key="txt" value="33" />
         </counts>
       </usages-collector>
@@ -106,10 +72,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1379">
+            <state relative-caret-position="1607">
               <caret line="113" column="49" selection-start-line="113" selection-start-column="36" selection-end-line="113" selection-end-column="49" />
             </state>
           </provider>
@@ -118,17 +84,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/push_utils.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="809">
-              <caret line="65" column="10" lean-forward="true" selection-start-line="65" selection-start-column="10" selection-end-line="65" selection-end-column="10" />
+            <state relative-caret-position="30">
+              <caret line="53" column="21" selection-start-line="53" selection-start-column="21" selection-end-line="53" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="751">
+                <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/definations.go">
+        <entry file="file://$PROJECT_DIR$/example_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="326" column="2" lean-forward="true" selection-start-line="326" selection-start-column="2" selection-end-line="326" selection-end-column="2" />
+            <state relative-caret-position="285">
+              <caret line="15" column="30" lean-forward="true" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+              <folding>
+                <element signature="e#15#44#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -208,8 +189,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="637" />
+    <option name="y" value="73" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -363,10 +344,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1607">
+          <caret line="113" column="49" selection-start-line="113" selection-start-column="36" selection-end-line="113" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/definations.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="272" column="5" selection-start-line="272" selection-start-column="5" selection-end-line="272" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/push_utils.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="809">
-          <caret line="65" column="10" lean-forward="true" selection-start-line="65" selection-start-column="10" selection-end-line="65" selection-end-column="10" />
+        <state relative-caret-position="30">
+          <caret line="53" column="21" selection-start-line="53" selection-start-column="21" selection-end-line="53" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -380,28 +375,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/definations.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="326" column="2" lean-forward="true" selection-start-line="326" selection-start-column="2" selection-end-line="326" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1379">
-          <caret line="113" column="49" selection-start-line="113" selection-start-column="36" selection-end-line="113" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="133">
-            <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-            <folding>
-              <element signature="e#14#76#0" expanded="true" />
-            </folding>
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="751">
+            <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
           </first_editor>
           <second_editor />
         </state>
