@@ -13,6 +13,12 @@
 ## 用法
 
 ### 安装
+#### Go modules
+
+    gitee.com/kmlixh/xinge v1.0.0
+
+#### 普通方式
+
 `$ go get gitee.com/kmlixh/xinge`
 
 或者
