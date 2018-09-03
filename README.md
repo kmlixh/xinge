@@ -17,6 +17,10 @@
 
     gitee.com/kmlixh/xinge v1.0.0
 
+    或
+
+    github.com/kmlixh/xinge v1.0.0
+
 #### 普通方式
 
 `$ go get gitee.com/kmlixh/xinge`
